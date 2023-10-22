@@ -1,0 +1,8 @@
+# Local customizations
+local.*
+*.local.*
+
+# Distributables
+dist/
+*.zip
+
