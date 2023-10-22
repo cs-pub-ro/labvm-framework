@@ -37,7 +37,7 @@ endef
 define vm_gen_rules
 # VM build rules for $(vm)
 $(vm)-dest-image := $(-vm-dest-image)
-.PHONY: $(vm) $(vm)_clean
+.PHONY: $(vm) $(vm)_clean $(vm)_edit $(vm)_commit
 #@ $(vm) main build goal
 $(vm): $(-vm-dest-image)
 $(-vm-dest-image): $(-vm-rule-deps)
@@ -48,7 +48,19 @@ $(-vm-dest-dir)/.exists:
 	$$(MAKE) FORCE= "$(-vm-dest-image)"
 #@ $(vm) clean rule
 $(vm)_clean:
-	rm -rf "$(-vm-dest-dir)/"
+	rm -rf "$(-vm-dest-dir)/" "$$($(vm)-edit-dir)"
+
+#@ $(vm) edit rule: uses $(vm) as backing file for rapid VM testing / editing
+$(vm)_edit: PAUSE=1
+$(vm)_edit: packer-args-extra=-var "use_backing_file=true"
+$(vm)_edit: | $(-vm-dest-dir)/.exists
+	$(let -vm-source-image,$(-vm-dest-image), \
+		$(let -vm-name,$(-vm-name)_edit,$(vm_packer_cmd)))
+$(vm)-edit-dir := $(let -vm-name,$(-vm-name)_edit,$(-vm-dest-dir))
+$(vm)-edit-file := $(let -vm-name,$(-vm-name)_edit,$(-vm-dest-file))
+#@ commits $(vm)_edit changes back to its backing image
+$(vm)_commit:
+	qemu-img commit "$$($(vm)-edit-dir)/$$($(vm)-edit-file)"
 
 endef
 gen_all_vm_rules = $(foreach vm,$(build-vms),$(nl)$(vm_gen_rules))

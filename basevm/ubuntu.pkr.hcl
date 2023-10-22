@@ -12,7 +12,9 @@ variables {
   vm_pause = 0
   vm_debug = 0
   qemu_unmap = false
+  qemu_ssh_forward = 20022
   source_image = "https://releases.ubuntu.com/22.04/ubuntu-22.04.3-live-server-amd64.iso"
+  use_backing_file = false
   source_checksum = "none"
   output_directory = "/tmp/packer-out"
   boot_wait = "5s"
@@ -39,14 +41,18 @@ source "qemu" "ubuntu-22-base" {
   // ISO & Output details
   iso_url           = var.source_image
   iso_checksum      = var.source_checksum
+  disk_image        = var.use_backing_file
+  use_backing_file  = var.use_backing_file
   output_directory  = var.output_directory
   ssh_username      = var.ssh_username
   ssh_password      = var.ssh_password
   ssh_timeout       = "30m"
+  host_port_min     = var.qemu_ssh_forward
+  host_port_max     = var.qemu_ssh_forward
 
   http_directory    = "http"
-  boot_wait = var.boot_wait
-  boot_command = [
+  boot_wait = (var.use_backing_file ? null : var.boot_wait)
+  boot_command = (var.use_backing_file ? null : [
     "c<wait>",
     "linux /casper/vmlinuz --- autoinstall ds=\"nocloud;s=http://{{.HTTPIP}}:{{.HTTPPort}}/\"",
     "<enter><wait>",
@@ -54,7 +60,7 @@ source "qemu" "ubuntu-22-base" {
     "<enter><wait>",
     "boot",
     "<enter>"
-  ]
+  ])
   shutdown_command  = "sudo /sbin/shutdown -h now"
 }
 
@@ -66,7 +72,7 @@ build {
       "scripts/00-base.sh",
       "scripts/90-cleanup.sh",
     ]
-    execute_command = "{{.Vars}} sudo -E -S bash -ex '{{.Path}}'"
+    execute_command = "{{.Vars}} sudo -E -S bash -e '{{.Path}}'"
     environment_vars = [
       "VM_DEBUG=${var.vm_debug}"
     ]
