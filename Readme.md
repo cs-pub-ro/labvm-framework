@@ -1,15 +1,15 @@
-# Labs virtual machine framework
+# CS Labs virtual machine framework
 
 This repository contains a base framework and scripts for generating Lab
 VMs using `qemu` and Packer (check the requirements below).
 
-Features:
+**Features:**
 
  - automatic generation of Ubuntu-based VM images;
  - Makefile rules for a consistent development workflow;
  - customizable & embeddable (recommended: as git submodule);
 
-Base requirements:
+**Base requirements:**
 
  - a modern Linux system;
  - basic build tools (make);
@@ -31,6 +31,13 @@ Finally, run: `make init` to ensure that all required Packer plugins are install
 
 ## Makefile usage
 
+The following VMs are defined in the base framework (see the [Makefile](./Makefile)):
+
+- `basevm`: automatically installs a base Ubuntu VM from a live ISO (with
+  `student:student` credentials);
+- `cloudvm`: builds a cloud-init VM, cleaned up and readily integrated with
+  cloud VMs (e.g., OpenStack).
+
 For each declared VM layer (e.g., `basevm`), a Makefile goal with the same name
 is defined by the `framework.mk`, plus several other utility rules:
 
@@ -41,11 +48,6 @@ is defined by the `framework.mk`, plus several other utility rules:
 - `<VM>_clean`: removes the generated image(s);
 - `ssh`: SSH-es into a running Packer VM (via forwarded port 10022);
 - `@debug`: used for debugging framework-generated make rules.
-
-The following VMs are defined in the base framework (see the [Makefile](./Makefile)):
-
-- `basevm`: automatically installs a base Ubuntu VM from a live ISO (with
-  `student:student` credentials);
 
 If packer complains about the output file existing, you must delete the
 generated VM (either using the `<VM>_clean` rule, or manually), or set the

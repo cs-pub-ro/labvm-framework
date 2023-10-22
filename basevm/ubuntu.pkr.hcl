@@ -14,8 +14,8 @@ variables {
   qemu_unmap = false
   qemu_ssh_forward = 20022
   source_image = "https://releases.ubuntu.com/22.04/ubuntu-22.04.3-live-server-amd64.iso"
-  use_backing_file = false
   source_checksum = "none"
+  use_backing_file = false
   output_directory = "/tmp/packer-out"
   boot_wait = "5s"
   ssh_username = "student"
@@ -44,6 +44,7 @@ source "qemu" "ubuntu-22-base" {
   disk_image        = var.use_backing_file
   use_backing_file  = var.use_backing_file
   output_directory  = var.output_directory
+
   ssh_username      = var.ssh_username
   ssh_password      = var.ssh_password
   ssh_timeout       = "30m"

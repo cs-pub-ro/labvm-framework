@@ -1,5 +1,8 @@
 # Default make configuration variables
 
+# First, load user overrides
+include config.local.mk
+
 # Framework self-reference (relative) directory
 FRAMEWORK_DIR ?= .
 
@@ -18,16 +21,15 @@ PAUSE ?= $(DEBUG)
 
 # Packer invocation arguments
 PACKER ?= packer
+PACKER_ARGS_EXTRA ?=
 PACKER_ARGS ?= -on-error=abort $(if $(PACKER_DEBUG),-debug) \
 			   $(call _packer_var,vm_pause,$(PAUSE)) \
 			   $(call _packer_var,vm_debug,$(DEBUG))
+PACKER_ARGS += $(PACKER_ARGS_EXTRA)
 
 # ssh goal parameters
 SSH ?= ssh
 SSH_USER ?= student
 SSH_PORT ?= 20022
 SSH_ARGS ?= -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null
-
-# Load user overrides
-include config.local.mk
 
