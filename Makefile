@@ -1,6 +1,14 @@
-# Makefile for building the default (base + cloud) VMs
-DEFAULT_GOAL ?= basevm
-INIT_GOAL ?= basevm
+##
+## Top-level makefile for building the default framework VMs
+##
+
+# First, define VM framework's directory & include it!
+FRAMEWORK_DIR ?= .
+include $(FRAMEWORK_DIR)/framework.mk
+
+# set default goals
+DEFAULT_GOAL = init
+INIT_GOAL = basevm
 
 # Fresh Ubuntu Server base VM
 ubuntu-ver = 22
@@ -17,9 +25,6 @@ cloudvm-src-image = $(basevm-dest-image)
 
 # list with all VMs to generate rules for
 build-vms += basevm cloudvm
-
-# include library & evaluate the rules
-include framework.mk
 
 $(call eval_common_rules)
 $(call eval_all_vm_rules)

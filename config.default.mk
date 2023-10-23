@@ -3,8 +3,12 @@
 # First, load user overrides
 include config.local.mk
 
-# Framework self-reference (relative) directory
-FRAMEWORK_DIR ?= .
+# Framework self-reference (relative) directory (should be set in Makefile)
+#FRAMEWORK_DIR ?= .
+
+# Default / initial goals (may also be set in Makefile)
+DEFAULT_GOAL ?= init
+INIT_GOAL ?= $(firstword $(build-vms))
 
 # Packer base build directory
 BUILD_DIR ?= $(HOME)/.cache/packer
