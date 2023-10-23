@@ -63,3 +63,22 @@ letting you inspect the VM using qemu console / `ssh`):
 make basevm_edit PAUSE=1 DEBUG=1
 ```
 
+## Derivation & Customization
+
+If you want to create your own custom VMs using this as base image, it is
+you can either fork this repository or include it as git submodule
+(recommended):
+
+```sh
+git submodule init
+git submodule add https://github.com/cs-pub-ro/labvm-framework.git framework
+cp -r framework/template/* ./
+```
+
+Afterwards, you must modify the Makefile and make `FRAMEWORK_DIR` point to the
+framework's relative directory (see TODOs inside the template).
+
+You might also want to check out the example [packer
+file](./template/examplevm/example.pkr.hcl) & [provisioning
+scripts](./template/examplevm/scripts/)!
+

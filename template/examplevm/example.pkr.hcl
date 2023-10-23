@@ -8,7 +8,7 @@ packer {
 }
 
 variables {
-  vm_name = "cloudvm"
+  vm_name = "examplevm"
   vm_pause = 0
   vm_debug = 0
   vm_noinstall = 0
@@ -22,7 +22,7 @@ variables {
   ssh_password = "student"
 }
 
-source "qemu" "cloudvm" {
+source "qemu" "examplevm" {
   // VM Info:
   vm_name       = var.vm_name
   headless      = false
@@ -55,28 +55,30 @@ source "qemu" "cloudvm" {
 }
 
 build {
-  sources = ["sources.qemu.cloudvm"]
+  sources = ["sources.qemu.examplevm"]
 
+  # create destination dirs + set privileges (`file` provisioner requires this...)
   provisioner "shell" {
     inline = [
-      "rm -rf /home/student/install_cloud",
-      "mkdir -p /home/student/install_cloud",
-      "chown student:student /home/student/install_cloud -R"
+      "rm -rf /home/student/provision-scripts", "mkdir -p /home/student/provision-scripts",
+      "chown student:student /home/student/provision-scripts"
     ]
     execute_command = "{{.Vars}} sudo -E -S bash -e '{{.Path}}'"
     environment_vars = [
       "VM_DEBUG=${var.vm_debug}"
     ]
   }
+  # copy the provisioning scripts to student's home
   provisioner "file" {
-  source = "scripts/"
-    destination = "/home/student/install_cloud"
+    source = "scripts/"
+    destination = "/home/student/provision-scripts"
   }
-
+  
+  # run the scripts!
   provisioner "shell" {
     inline = [
-      "chmod +x /home/student/install_cloud/install.sh",
-      "/home/student/install_cloud/install.sh"
+      "chmod +x /home/student/provision-scripts/install.sh",
+      "/home/student/provision-scripts/install.sh"
     ]
     execute_command = "{{.Vars}} sudo -E -S bash -e '{{.Path}}'"
     environment_vars = [
@@ -84,10 +86,10 @@ build {
     ]
   }
 
+  # optionally, when PAUSE=1, keep the qemu VM open!
   provisioner "breakpoint" {
     disable = (var.vm_pause == 0)
     note    = "this is a breakpoint"
   }
 }
-
 
