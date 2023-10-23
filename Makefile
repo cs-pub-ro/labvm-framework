@@ -10,8 +10,13 @@ basevm-src-image = $(BASE_VM_INSTALL_ISO)
 # VM destination file (automatically generated var.)
 #basevm-dest-image = $(BUILD_DIR)/$(basevm-name)/$(basevm-name).qcow2
 
+# Cloud-init image
+cloudvm-name = ubuntu_$(ubuntu-ver)_cloud
+cloudvm-packer-src = $(FRAMEWORK_DIR)/cloudvm
+cloudvm-src-image = $(basevm-dest-image)
+
 # list with all VMs to generate rules for
-build-vms += basevm
+build-vms += basevm cloudvm
 
 # include library & evaluate the rules
 include framework.mk
