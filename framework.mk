@@ -1,7 +1,7 @@
 # Makefile framework for Packer VM builds
 
 # load configuration file
-include config.default.mk
+include $(FRAMEWORK_DIR)/config.default.mk
 
 # utils: blank + new line values
 blank :=
@@ -79,10 +79,7 @@ ssh:
 $$(BUILD_DIR)/:
 	mkdir -p "$$@"
 
-$(gen_debug_rules)
-
 endef
-
 # debugging helper rules
 define gen_debug_rules
 # debug helpers
@@ -96,5 +93,6 @@ define gen_debug_rules
 @print-% : ; @echo $$* = $$($$*)
 
 endef
-eval_debug_rules = $(eval $(gen_debug_rules))
+eval_debug_rules = $(eval $(gen_debug_rules)$(nl))
+eval_common_rules = $(eval $(gen_common_rules))$(call eval_debug_rules)
 

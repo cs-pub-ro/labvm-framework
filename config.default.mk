@@ -1,7 +1,8 @@
 # Default make configuration variables
 
-# First, load user overrides
-include config.local.mk
+# just in case you want to change it, do it from your Makefile
+USER_CONFIG_DIR ?= .
+-include $(USER_CONFIG_DIR)/config.local.mk
 
 # Framework self-reference (relative) directory (should be set in Makefile)
 #FRAMEWORK_DIR ?= .
