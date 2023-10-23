@@ -16,6 +16,6 @@ build-vms += basevm
 # include library & evaluate the rules
 include framework.mk
 
-$(eval $(gen_common_rules))
-$(eval $(gen_all_vm_rules))
+$(call eval_common_rules)
+$(call eval_all_vm_rules)
 

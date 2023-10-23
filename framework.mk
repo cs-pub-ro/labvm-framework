@@ -64,6 +64,7 @@ $(vm)_commit:
 
 endef
 gen_all_vm_rules = $(foreach vm,$(build-vms),$(nl)$(vm_gen_rules))
+eval_all_vm_rules = $(foreach vm,$(build-vms),$(eval $(nl)$(vm_gen_rules)))
 
 define gen_common_rules
 .PHONY: _ init ssh
@@ -95,4 +96,5 @@ define gen_debug_rules
 @print-% : ; @echo $$* = $$($$*)
 
 endef
+eval_debug_rules = $(eval $(gen_debug_rules))
 
