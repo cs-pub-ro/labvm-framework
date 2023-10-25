@@ -67,7 +67,7 @@ define gen_common_rules
 .PHONY: _ init ssh
 _: $(DEFAULT_GOAL)
 init:
-	packer init "$(let vm,$$(INIT_GOAL),$(-vm-packer-src))"
+	$(foreach vm,$(INIT_GOAL),packer init "$(-vm-packer-src)";)
 
 # ssh into a Packer/qemu VM
 ssh:

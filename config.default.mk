@@ -9,7 +9,7 @@ USER_CONFIG_DIR ?= .
 
 # Default / initial goals (may also be set in Makefile)
 DEFAULT_GOAL ?= init
-INIT_GOAL ?= $(firstword $(build-vms))
+INIT_GOAL ?= $(build-vms)
 
 # Packer base build directory
 BUILD_DIR ?= $(HOME)/.cache/packer

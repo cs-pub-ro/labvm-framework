@@ -6,9 +6,8 @@
 FRAMEWORK_DIR ?= .
 include $(FRAMEWORK_DIR)/framework.mk
 
-# set default goals
+# set default goal
 DEFAULT_GOAL = init
-INIT_GOAL = basevm
 
 # Fresh Ubuntu Server base VM
 ubuntu-ver = 22
