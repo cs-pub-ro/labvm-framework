@@ -1,17 +1,14 @@
 # Makefile framework for Packer VM builds
 
+# prerequisites
+include $(FRAMEWORK_DIR)/utils.mk
+
 # load configuration file
 include $(FRAMEWORK_DIR)/config.default.mk
 
-# utils: blank + new line values
-blank :=
-define nl
-$(blank)
-$(blank)
-endef
-# utility macro to check if a variable is set, otherwise return a default
-_def_value = $(if $($(1)),$($(1)),$(2))
-_packer_var = $(if $(2),-var "$(1)=$(2)")
+# speed tweaks
+MAKEFLAGS += --no-builtin-rules
+.SUFFIXES:
 
 # VM-specific variables and their defaults
 -vm-name = $(call _def_value,$(vm)-name,$(vm))
@@ -20,7 +17,7 @@ _packer_var = $(if $(2),-var "$(1)=$(2)")
 -vm-dest-file = $(call _def_value,$(vm)-dest-file,$(-vm-name).qcow2)
 -vm-dest-dir = $(call _def_value,$(vm)-dest-dir,$$(BUILD_DIR)/$(-vm-name))
 -vm-dest-image = $(-vm-dest-dir)/$(-vm-dest-file)
--vm-rule-deps = $(wildcard $(-vm-packer-src)/**) | $(-vm-source-image) $$(BUILD_DIR)/
+-vm-rule-deps = $(call rwildcard,$(-vm-packer-src),*) | $(-vm-source-image) $$(BUILD_DIR)/
 -vm-packer-args = $$(PACKER_ARGS) \
 			 -var "vm_name=$(-vm-dest-file)" \
 			 -var "source_image=$(-vm-source-image)" \
