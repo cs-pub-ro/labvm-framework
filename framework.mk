@@ -46,6 +46,11 @@ $(-vm-dest-dir)/.exists:
 #@ $(vm) clean rule
 $(vm)_clean:
 	rm -rf "$(-vm-dest-dir)/" "$$($(vm)-edit-dir)"
+#@ $(vm) vmdk conversion rule
+$(vm)-vmdk-file := $(-vm-dest-dir)/$(-vm-dest-file:.qcow2=.vmdk)
+$(vm)_vmdk: $(-vm-dest-image)
+	qemu-img convert -O vmdk "$(-vm-dest-image)" "$$($(vm)-vmdk-file)"
+	ls -lh "$$($(vm)-vmdk-file)"
 
 #@ $(vm) edit rule: uses $(vm) as backing file for rapid VM testing / editing
 $(vm)_edit: PAUSE=1
