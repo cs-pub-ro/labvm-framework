@@ -23,6 +23,7 @@ MAKEFLAGS += --no-builtin-rules
 			 -var "source_image=$(-vm-source-image)" \
 			 -var "output_directory=$(-vm-dest-dir)" \
 			 $$(packer-args-extra)
+-vm-extra-rules = $($(vm)-extra-rules)
 
 # Packer build command with VM-specific vars
 define vm_packer_cmd
@@ -63,6 +64,8 @@ $(vm)-edit-file := $(let -vm-name,$(-vm-name)_edit,$(-vm-dest-file))
 #@ commits $(vm)_edit changes back to its backing image
 $(vm)_commit:
 	qemu-img commit "$$($(vm)-edit-dir)/$$($(vm)-edit-file)"
+# extra rules? ::
+$(-vm-extra-rules)
 
 endef
 gen_all_vm_rules = $(foreach vm,$(build-vms),$(nl)$(vm_gen_rules))
