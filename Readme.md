@@ -76,9 +76,12 @@ cp -r framework/template/* ./
 ```
 
 Afterwards, you must modify the Makefile and make `FRAMEWORK_DIR` point to the
-framework's relative directory (see TODOs inside the template).
+framework's relative directory (see TODOs inside the template), see:
+[packer file](./template/examplevm/example.pkr.hcl) &
+[provisioning scripts](./template/examplevm/scripts/)!
 
-You might also want to check out the example [packer
-file](./template/examplevm/example.pkr.hcl) & [provisioning
-scripts](./template/examplevm/scripts/)!
+Also check out other VM projects using it:
+
+- [Computer Networks Lab VM](https://github.com/cs-pub-ro/RL-lab-vm)
+- [Introduction to CyberSecurity Lab VM](https://github.com/cs-pub-ro/ISC-lab-vm)
 
