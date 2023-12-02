@@ -1,5 +1,8 @@
 # Makefile utility macros
 
+# check variable if defined & not empty
+check-var = $(if $(strip $($1)),,$(error "$1" is not defined))
+
 # blank (i.e., empty string) variable
 blank :=
 # variable containing a single new line

@@ -7,6 +7,8 @@ MOUNTPOINT=/tmp/vm-framework-zerofree
 
 if ! lsmod | grep -wq "nbd"; then
 	modprobe nbd max_part=8 || exit 1
+	# wait for the module to initialize (yep, ugly hack)
+	sleep 3
 fi
 
 mkdir -p "$MOUNTPOINT"
