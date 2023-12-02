@@ -13,16 +13,18 @@ MAKEFLAGS += --no-builtin-rules
 # VM-specific variables and their defaults
 -vm-name = $(call _def_value,$(vm)-name,$(vm))
 -vm-packer-src = $(call _def_value,$(vm)-packer-src,$(vm))
+-vm-packer-extra-args = $(call _def_value,$(vm)-packer-args,)
 -vm-source-image = $(call _def_value,$(vm)-src-image,$$(BASE_VM_INSTALL_ISO))
 -vm-dest-file = $(call _def_value,$(vm)-dest-file,$(-vm-name).qcow2)
 -vm-dest-dir = $(call _def_value,$(vm)-dest-dir,$$(BUILD_DIR)/$(-vm-name))
 -vm-dest-image = $(-vm-dest-dir)/$(-vm-dest-file)
--vm-rule-deps = $(call rwildcard,$(-vm-packer-src),*) | $(-vm-source-image) $$(BUILD_DIR)/
+-vm-extra-deps = $(call _def_value,$(vm)-deps,)
+-vm-rule-deps = $(call rwildcard,$(-vm-packer-src),*) $(-vm-extra-deps) | $(-vm-source-image) $$(BUILD_DIR)/
 -vm-packer-args = $$(PACKER_ARGS) \
 			 -var "vm_name=$(-vm-dest-file)" \
 			 -var "source_image=$(-vm-source-image)" \
 			 -var "output_directory=$(-vm-dest-dir)" \
-			 $$(packer-args-extra)
+			 $(-vm-packer-extra-args) $$(packer-args-extra)
 -vm-extra-rules = $($(vm)-extra-rules)
 
 # Packer build command with VM-specific vars
