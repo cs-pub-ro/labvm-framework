@@ -69,7 +69,7 @@ build {
     ]
   }
   provisioner "file" {
-  source = "scripts/"
+    source = "scripts/"
     destination = "/home/student/install_cloud"
   }
 
