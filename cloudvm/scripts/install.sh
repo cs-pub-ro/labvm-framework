@@ -18,7 +18,8 @@ rsync -ai --chown="root:root" "$SRC/etc/" "/etc/"
 
 rm -f /etc/cloud/cloud.cfg.d/99-installer.cfg
 
-# disable ssh password login
+# disable ssh password authentication
+rm -f /etc/ssh/sshd_config.d/50-cloud-init.conf
 sed -i "s/.*PasswordAuthentication.*/PasswordAuthentication no/g" /etc/ssh/sshd_config
 
 # Cleanup the system
