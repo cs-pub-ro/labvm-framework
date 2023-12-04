@@ -10,22 +10,33 @@ include $(FRAMEWORK_DIR)/config.default.mk
 MAKEFLAGS += --no-builtin-rules
 .SUFFIXES:
 
-# VM-specific variables and their defaults
+## <vm>-specific (placeholder for VM's ID + goal) variables and their defaults
+# <vm>-name: name of the VM (also used to generate VM's destination directory + images file)
 -vm-name = $(call _def_value,$(vm)-name,$(vm))
+# <vm>-src: source (root) directory of the Packer project (should contain .pkr.hcl file)
 -vm-packer-src = $(call _def_value,$(vm)-packer-src,$(vm))
+# <vm>-packer-args: extra packer invocation arguments
 -vm-packer-extra-args = $(call _def_value,$(vm)-packer-args,)
+# <vm>-src-image: take source image from another file
 -vm-source-image = $(call _def_value,$(vm)-src-image,$$(BASE_VM_INSTALL_ISO))
+# <vm>-dest-file: override the destination image filename (+ extension!)
 -vm-dest-file = $(call _def_value,$(vm)-dest-file,$(-vm-name).qcow2)
+# <vm>-dest-dir: override the destination directory (defaults to <vm>-name)
 -vm-dest-dir = $(call _def_value,$(vm)-dest-dir,$$(BUILD_DIR)/$(-vm-name))
--vm-dest-image = $(-vm-dest-dir)/$(-vm-dest-file)
+# <vm>-deps: add extra dependencies to the VM's targets
 -vm-extra-deps = $(call _def_value,$(vm)-deps,)
+# <vm>-extra-rules: generates extra rules for the current VM target
+#    -> use `define` to create multi-line rules;
+#    -> you can use $(vm) inside (or every other macro containing $(vm))!
+-vm-extra-rules = $($(vm)-extra-rules)
+# internal macros:
+-vm-dest-image = $(-vm-dest-dir)/$(-vm-dest-file)
 -vm-rule-deps = $(call rwildcard,$(-vm-packer-src),*) $(-vm-extra-deps) | $(-vm-source-image) $$(BUILD_DIR)/
 -vm-packer-args = $$(PACKER_ARGS) \
 			 -var "vm_name=$(-vm-dest-file)" \
 			 -var "source_image=$(-vm-source-image)" \
 			 -var "output_directory=$(-vm-dest-dir)" \
 			 $(-vm-packer-extra-args) $$(packer-args-extra)
--vm-extra-rules = $($(vm)-extra-rules)
 
 # Packer build command with VM-specific vars
 define vm_packer_cmd
