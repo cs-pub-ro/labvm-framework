@@ -20,7 +20,7 @@ basevm-src-image = $(BASE_VM_INSTALL_ISO)
 # Cloud-init image
 cloudvm-name = ubuntu_$(ubuntu-ver)_cloud
 cloudvm-packer-src = $(FRAMEWORK_DIR)/cloudvm
-cloudvm-src-image = $(basevm-dest-image)
+cloudvm-src-from = basevm
 
 # list with all VMs to generate rules for
 build-vms += basevm cloudvm

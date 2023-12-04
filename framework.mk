@@ -15,10 +15,17 @@ MAKEFLAGS += --no-builtin-rules
 -vm-name = $(call _def_value,$(vm)-name,$(vm))
 # <vm>-src: source (root) directory of the Packer project (should contain .pkr.hcl file)
 -vm-packer-src = $(call _def_value,$(vm)-packer-src,$(vm))
+# <vm>-packer-def-args: default packer invocation arguments (before all other)
+-vm-packer-def-args = $(call _def_value,$(vm)-packer-def-args,)
 # <vm>-packer-args: extra packer invocation arguments
 -vm-packer-extra-args = $(call _def_value,$(vm)-packer-args,)
-# <vm>-src-image: take source image from another file
--vm-source-image = $(call _def_value,$(vm)-src-image,$$(BASE_VM_INSTALL_ISO))
+# <vm>-src-from: take source image from another makefile VM (goal name)
+-vm-source-from = $($(vm)-src-from)
+# <vm>-src-image: take source image from another file (when ! <vm>-source-from)
+-vm-source-image = $(strip $(if $(-vm-source-from),$(let vm,$(-vm-source-from),$(-vm-dest-image)),\
+			$(call _def_value,$(vm)-src-image,$$(BASE_VM_INSTALL_ISO))))
+# <vm>-src-deps: override the VM target dependencies (defaults to "<vm>-src/**")
+-vm-source-deps = $(call _def_value,$(vm)-src-deps,$(call rwildcard,$(-vm-packer-src),*))
 # <vm>-dest-file: override the destination image filename (+ extension!)
 -vm-dest-file = $(call _def_value,$(vm)-dest-file,$(-vm-name).qcow2)
 # <vm>-dest-dir: override the destination directory (defaults to <vm>-name)
@@ -29,10 +36,14 @@ MAKEFLAGS += --no-builtin-rules
 #    -> use `define` to create multi-line rules;
 #    -> you can use $(vm) inside (or every other macro containing $(vm))!
 -vm-extra-rules = $($(vm)-extra-rules)
+
 # internal macros:
 -vm-dest-image = $(-vm-dest-dir)/$(-vm-dest-file)
--vm-rule-deps = $(call rwildcard,$(-vm-packer-src),*) $(-vm-extra-deps) | $(-vm-source-image) $$(BUILD_DIR)/
--vm-packer-args = $$(PACKER_ARGS) \
+-vm-dest-timestamp = $(-vm-dest-dir)/.exists
+-vm-image-deps = $(strip $(if $(-vm-source-from),$(let vm,$(-vm-source-from),$(-vm-dest-timestamp)),\
+			$(-vm-source-image)))
+-vm-rule-deps = $(-vm-source-deps) $(-vm-extra-deps) $(-vm-image-deps) | $$(BUILD_DIR)/
+-vm-packer-args = $$(PACKER_ARGS) $(-vm-packer-def-args) \
 			 -var "vm_name=$(-vm-dest-file)" \
 			 -var "source_image=$(-vm-source-image)" \
 			 -var "output_directory=$(-vm-dest-dir)" \
@@ -53,9 +64,9 @@ $(vm)-dest-image := $(-vm-dest-image)
 $(vm): $(-vm-dest-image)
 $(-vm-dest-image): $(-vm-rule-deps)
 	$(vm_packer_cmd)
-	touch "$(-vm-dest-dir)/.exists"
+	touch "$(-vm-dest-timestamp)"
 #@ $(vm) secondary target (ignores force rebuild, for use as dependency)
-$(-vm-dest-dir)/.exists:
+$(-vm-dest-timestamp):
 	$$(MAKE) FORCE= "$(-vm-dest-image)"
 #@ $(vm) clean rule
 $(vm)_clean:
@@ -69,7 +80,7 @@ $(vm)_vmdk: $(-vm-dest-image)
 #@ $(vm) edit rule: uses $(vm) as backing file for rapid VM testing / editing
 $(vm)_edit: PAUSE=1
 $(vm)_edit: packer-args-extra=-var "use_backing_file=true"
-$(vm)_edit: | $(-vm-dest-dir)/.exists
+$(vm)_edit: $(-vm-dest-timestamp)
 	$(let -vm-source-image,$(-vm-dest-image), \
 		$(let -vm-name,$(-vm-name)_edit,$(vm_packer_cmd)))
 $(vm)-edit-dir := $(let -vm-name,$(-vm-name)_edit,$(-vm-dest-dir))
