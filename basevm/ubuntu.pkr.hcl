@@ -55,7 +55,7 @@ source "qemu" "ubuntu-22-base" {
   boot_wait = (var.use_backing_file ? null : var.boot_wait)
   boot_command = (var.use_backing_file ? null : [
     "c<wait>",
-    "linux /casper/vmlinuz --- autoinstall ds=\"nocloud;s=http://{{.HTTPIP}}:{{.HTTPPort}}/\"",
+    "linux /casper/vmlinuz autoinstall ds=\"nocloud;s=http://{{.HTTPIP}}:{{.HTTPPort}}/\" ---",
     "<enter><wait>",
     "initrd /casper/initrd",
     "<enter><wait>",

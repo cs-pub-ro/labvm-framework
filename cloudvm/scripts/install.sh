@@ -22,6 +22,14 @@ rm -f /etc/cloud/cloud.cfg.d/99-installer.cfg
 rm -f /etc/ssh/sshd_config.d/50-cloud-init.conf
 sed -i "s/.*PasswordAuthentication.*/PasswordAuthentication no/g" /etc/ssh/sshd_config
 
+# update grub to replace kernel cmdline
+GRUB_CMDLINE_VIRT="modprobe.blacklist=floppy console=ttyS0,115200n8 no_timer_check edd=off"
+sed -i "s/GRUB_CMDLINE_LINUX_DEFAULT=.*/GRUB_CMDLINE_LINUX_DEFAULT=\"$GRUB_CMDLINE_VIRT\"/g" /etc/default/grub
+update-grub
+
 # Cleanup the system
+apt-get -y autoremove
+apt-get -y clean
 rm -rf /home/student/install*
+cloud-init clean --logs --machine-id
 
