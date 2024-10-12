@@ -13,6 +13,7 @@ variables {
   vm_debug = 0
   qemu_unmap = false
   qemu_ssh_forward = 20022
+  disk_size = 5120
   source_image = "https://releases.ubuntu.com/22.04/ubuntu-22.04.3-live-server-amd64.iso"
   source_checksum = "none"
   use_backing_file = false
@@ -20,6 +21,14 @@ variables {
   boot_wait = "5s"
   ssh_username = "student"
   ssh_password = "student"
+}
+
+locals {
+  envs = [
+    "VM_DEBUG=${var.vm_debug}",
+    "INSTALL_DIR=/home/student/install"
+  ]
+  sudo = "{{.Vars}} sudo -E -S bash -e '{{.Path}}'"
 }
 
 source "qemu" "ubuntu-22-base" {
@@ -30,7 +39,7 @@ source "qemu" "ubuntu-22-base" {
   // Virtual Hardware Specs
   memory         = 2048
   cpus           = 2
-  disk_size      = 8000
+  disk_size      = var.disk_size
   disk_interface = "virtio"
   net_device     = "virtio-net"
   // disk usage optimizations (unmap zeroes as free space)
@@ -73,10 +82,8 @@ build {
       "scripts/00-base.sh",
       "scripts/90-cleanup.sh",
     ]
-    execute_command = "{{.Vars}} sudo -E -S bash -e '{{.Path}}'"
-    environment_vars = [
-      "VM_DEBUG=${var.vm_debug}"
-    ]
+    execute_command = local.sudo
+    environment_vars = local.envs
   }
 
   provisioner "breakpoint" {
