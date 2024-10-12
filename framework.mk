@@ -73,7 +73,7 @@ $(vm)_clean:
 	rm -rf "$(-vm-dest-dir)/" "$$($(vm)-edit-dir)"
 #@ $(vm) vmdk conversion rule
 $(vm)-vmdk-file := $(-vm-dest-dir)/$(-vm-dest-file:.qcow2=.vmdk)
-$(vm)_vmdk: $(-vm-dest-image)
+$(vm)_vmdk: $(-vm-dest-timestamp)
 	qemu-img convert -O vmdk "$(-vm-dest-image)" "$$($(vm)-vmdk-file)"
 	ls -lh "$$($(vm)-vmdk-file)"
 
