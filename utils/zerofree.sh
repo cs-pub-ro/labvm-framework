@@ -4,11 +4,12 @@
 
 QEMU_NBD_DEV=nbd0
 MOUNTPOINT=/tmp/vm-framework-zerofree
+WAIT_SEC=${WAIT_SEC:-'5'}
 
 if ! lsmod | grep -wq "nbd"; then
 	modprobe nbd max_part=8 || exit 1
 	# wait for the module to initialize (yep, ugly hack)
-	sleep 3
+	sleep "$WAIT_SEC"
 fi
 
 mkdir -p "$MOUNTPOINT"
@@ -21,6 +22,7 @@ exit_fail() {
 }
 
 qemu-nbd -c "/dev/$QEMU_NBD_DEV" "$1"  || exit 2
+sleep "$WAIT_SEC"
 mount "/dev/${QEMU_NBD_DEV}p2" "$MOUNTPOINT" || exit_fail
 e4defrag "$MOUNTPOINT" > /dev/null
 if command -v zerofree &> /dev/null; then
