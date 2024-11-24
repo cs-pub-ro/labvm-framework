@@ -12,8 +12,10 @@ variables {
   vm_pause = 0
   vm_debug = 0
   vm_noinstall = 0
+  vm_password = ""
   qemu_unmap = false
   qemu_ssh_forward = 20022
+  disk_size = 8192
   source_image = "./path/to/ubuntu-22-base.qcow2"
   source_checksum = "none"
   use_backing_file = true
@@ -22,15 +24,26 @@ variables {
   ssh_password = "student"
 }
 
+locals {
+  install_dir = "/home/student/install_cloud"
+  envs = [
+    "VM_DEBUG=${var.vm_debug}",
+    "VM_NOINSTALL=${var.vm_noinstall}",
+    "VM_PASSWORD=${var.vm_password}",
+    "INSTALL_DIR=${local.install_dir}"
+  ]
+  sudo = "{{.Vars}} sudo -E -S bash -e '{{.Path}}'"
+}
+
 source "qemu" "cloudvm" {
   // VM Info:
   vm_name       = var.vm_name
   headless      = false
 
   // Virtual Hardware Specs
-  memory         = 1024
+  memory         = 2048
   cpus           = 2
-  disk_size      = 8000
+  disk_size      = var.disk_size
   disk_interface = "virtio"
   net_device     = "virtio-net"
   // disk usage optimizations (unmap zeroes as free space)
@@ -59,29 +72,24 @@ build {
 
   provisioner "shell" {
     inline = [
-      "rm -rf /home/student/install_cloud",
-      "mkdir -p /home/student/install_cloud",
-      "chown student:student /home/student/install_cloud -R"
+      "rm -rf $INSTALL_DIR && mkdir -p $INSTALL_DIR",
+      "chown student:student $INSTALL_DIR -R"
     ]
-    execute_command = "{{.Vars}} sudo -E -S bash -e '{{.Path}}'"
-    environment_vars = [
-      "VM_DEBUG=${var.vm_debug}"
-    ]
+    execute_command = local.sudo
+    environment_vars = local.envs
   }
+
   provisioner "file" {
-    source = "scripts/"
-    destination = "/home/student/install_cloud"
+    sources = ["scripts/"]
+    destination = local.install_dir
   }
 
   provisioner "shell" {
     inline = [
-      "chmod +x /home/student/install_cloud/install.sh",
-      "/home/student/install_cloud/install.sh"
+      "chmod +x $INSTALL_DIR/install.sh && $INSTALL_DIR/install.sh"
     ]
-    execute_command = "{{.Vars}} sudo -E -S bash -e '{{.Path}}'"
-    environment_vars = [
-      "VM_DEBUG=${var.vm_debug}",
-    ]
+    execute_command = local.sudo
+    environment_vars = local.envs
   }
 
   provisioner "breakpoint" {
