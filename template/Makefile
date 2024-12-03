@@ -10,6 +10,7 @@ FRAMEWORK_DIR ?= ..
 # you can also modify USER_CONFIG_DIR (where config.local.mk is loaded from)
 USER_CONFIG_DIR = ..
 include $(FRAMEWORK_DIR)/framework.mk
+include $(FRAMEWORK_DIR)/lib/gen_vbox.mk
 
 # set default goals
 DEFAULT_GOAL = examplevm
@@ -27,15 +28,21 @@ basevm-src-image = $(BASE_VM_INSTALL_ISO)
 examplevm-ver = 2023.01
 examplevm-name = examplevm_$(examplevm-ver)
 examplevm-packer-src = ./examplevm
-examplevm-src-image = $(basevm-dest-image)
+examplevm-src-from = basevm
+
+# Export example to VirtualBox
+vbox-name = example_vbox_$(examplevm-ver)
+vbox-type = vbox
+vbox-vmname = Example VBox VM
+vbox-src-from = examplevm
 
 # Cloud-init image (based on examplevm!, see src-image)
 cloudvm-name = ubuntu_$(ubuntu-ver)_cloud
 cloudvm-packer-src = $(FRAMEWORK_DIR)/cloudvm
-cloudvm-src-image = $(examplevm-dest-image)
+cloudvm-src-from = examplevm
 
 # list with all VMs to generate rules for (note: use dependency ordering!)
-build-vms += basevm examplevm cloudvm
+build-vms += basevm examplevm vbox cloudvm
 
 $(call eval_common_rules)
 $(call eval_all_vm_rules)

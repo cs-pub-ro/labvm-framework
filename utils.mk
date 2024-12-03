@@ -11,6 +11,8 @@ $(blank)
 $(blank)
 endef
 
+normalize_id=$(subst -,_,$1)
+
 # recursive wildcard macro
 # use: $(call rwildcard,$(path),*)
 rwildcard=$(foreach d,$(wildcard $(1:=/*)),$(call rwildcard,$d,$2) $(filter $(subst *,%,$2),$d))
