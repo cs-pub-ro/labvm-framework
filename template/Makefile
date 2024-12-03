@@ -11,6 +11,7 @@ FRAMEWORK_DIR ?= ..
 USER_CONFIG_DIR = ..
 include $(FRAMEWORK_DIR)/framework.mk
 include $(FRAMEWORK_DIR)/lib/gen_vbox.mk
+include $(FRAMEWORK_DIR)/lib/gen_vmware.mk
 
 # set default goals
 DEFAULT_GOAL = examplevm
@@ -30,11 +31,16 @@ examplevm-name = examplevm_$(examplevm-ver)
 examplevm-packer-src = ./examplevm
 examplevm-src-from = basevm
 
-# Export example to VirtualBox
+# Export example to VirtualBox & VMware
 vbox-name = example_vbox_$(examplevm-ver)
 vbox-type = vbox
 vbox-vmname = Example VBox VM
 vbox-src-from = examplevm
+
+vmware-name = example_vmware_$(examplevm-ver)
+vmware-type = vmware
+vmware-vmname = Example VMX VM
+vmware-src-from = examplevm
 
 # Cloud-init image (based on examplevm!, see src-image)
 cloudvm-name = ubuntu_$(ubuntu-ver)_cloud
@@ -42,7 +48,7 @@ cloudvm-packer-src = $(FRAMEWORK_DIR)/cloudvm
 cloudvm-src-from = examplevm
 
 # list with all VMs to generate rules for (note: use dependency ordering!)
-build-vms += basevm examplevm vbox cloudvm
+build-vms += basevm examplevm vbox vmware cloudvm
 
 $(call eval_common_rules)
 $(call eval_all_vm_rules)
