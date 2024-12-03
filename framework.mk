@@ -11,6 +11,8 @@ MAKEFLAGS += --no-builtin-rules
 .SUFFIXES:
 
 ## <vm>-specific (placeholder for VM's ID + goal) variables and their defaults
+# <vm>-type: type of the rules generator (defaults to packer)
+-vm-type = $(call _def_value,$(vm)-type,packer)
 # <vm>-name: name of the VM (also used to generate VM's destination directory + images file)
 -vm-name = $(call _def_value,$(vm)-name,$(vm))
 # <vm>-src: source (root) directory of the Packer project (should contain .pkr.hcl file)
@@ -55,8 +57,8 @@ $(if $(FORCE),rm -rf "$(-vm-dest-dir)";,) \
 cd "$(-vm-packer-src)" && $(PACKER) build $(-vm-packer-args) "./"
 endef
 
-# Macro to generate VM-specific rules
-define vm_gen_rules
+# Macro to generate packer-specific rules
+define vm_gen_packer_rules
 # VM build rules for $(vm)
 $(vm)-dest-image := $(-vm-dest-image)
 .PHONY: $(vm) $(vm)_clean $(vm)_edit $(vm)_commit
@@ -92,8 +94,9 @@ $(vm)_commit:
 $(-vm-extra-rules)
 
 endef
-gen_all_vm_rules = $(foreach vm,$(build-vms),$(nl)$(vm_gen_rules))
-eval_all_vm_rules = $(foreach vm,$(build-vms),$(eval $(nl)$(vm_gen_rules)))
+gen_vm_rules = $(call check-var,vm_gen_$(-vm-type)_rules)$(vm_gen_$(-vm-type)_rules)
+gen_all_vm_rules = $(foreach vm,$(build-vms),$(nl)$(gen_vm_rules))
+eval_all_vm_rules = $(foreach vm,$(build-vms),$(eval $(nl)$(gen_vm_rules)))
 
 define gen_common_rules
 .PHONY: _ init ssh
@@ -115,6 +118,7 @@ define gen_debug_rules
 .PHONY: @debug @debug-make @debug-rules
 @debug: @debug-rules
 @debug-rules:
+	$$(info $$(build-vms))
 	$$(info $$(gen_all_vm_rules))
 	@echo
 @debug-make: @debug-rules
