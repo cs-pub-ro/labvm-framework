@@ -10,8 +10,7 @@ FRAMEWORK_DIR ?= ..
 # you can also modify USER_CONFIG_DIR (where config.local.mk is loaded from)
 USER_CONFIG_DIR = ..
 include $(FRAMEWORK_DIR)/framework.mk
-include $(FRAMEWORK_DIR)/lib/gen_vbox.mk
-include $(FRAMEWORK_DIR)/lib/gen_vmware.mk
+include $(FRAMEWORK_DIR)/lib/gen_vm_combo.mk
 
 # set default goals
 DEFAULT_GOAL = examplevm
@@ -42,13 +41,18 @@ vmware-type = vmware
 vmware-vmname = Example VMX VM
 vmware-src-from = examplevm
 
+combovm-name = example_prj_$(examplevm-ver)
+combovm-type = vm-combo
+combovm-vmname = Example Combo VM
+combovm-src-from = examplevm
+
 # Cloud-init image (based on examplevm!, see src-image)
 cloudvm-name = ubuntu_$(ubuntu-ver)_cloud
 cloudvm-packer-src = $(FRAMEWORK_DIR)/cloudvm
 cloudvm-src-from = examplevm
 
 # list with all VMs to generate rules for (note: use dependency ordering!)
-build-vms += basevm examplevm vbox vmware cloudvm
+build-vms += basevm examplevm vbox vmware combovm cloudvm
 
 $(call eval_common_rules)
 $(call eval_all_vm_rules)
