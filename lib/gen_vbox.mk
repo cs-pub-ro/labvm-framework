@@ -22,7 +22,7 @@ define vbox-prj-template=
   	  snapshotFolder="Snapshots" lastStateChange="$(shell date -u +"%Y-%m-%dT%H:%M:%SZ")">
     <MediaRegistry>
       <HardDisks>
-        <HardDisk uuid="{{{TEMPLATE_DISK_UUID}}}" location="$(notdir $($(vm)-dest-vmdk))" 
+        <HardDisk uuid="{{{TEMPLATE_DISK_UUID}}}" location="$(notdir $($(vm)-vbox-dest-vmdk))" 
           format="VMDK" type="Normal"/>
       </HardDisks>
     </MediaRegistry>
@@ -75,27 +75,35 @@ define vbox-prj-template=
 </VirtualBox>
 endef
 
-# use vm-type = vbox to generate them
-define vm_gen_vbox_rules=
-.PHONY: $(vm) $(vm)_clean
-#@ $(vm) main build goal
-$(vm)-vbox-file := $(-vm-dest-dir)/$(-vm-name).vbox
-$(vm)-dest-vmdk := $(-vm-dest-dir)/$(-vm-name).vmdk
-$(vm): $(-vbox-src-vmdk)
+define vm_gen_vbox_prj_rule=
+$(vm)-vbox-prj := $(-vm-dest-dir)/$(-vm-name).vbox
+$$($(vm)-vbox-prj): $$($(vm)-vbox-dest-vmdk)
 	mkdir -p "$(-vm-dest-dir)"
-	echo "$$$$$(call normalize_id,_VM_VBOX_DATA__$(vm))" > "$$($(vm)-vbox-file)"
-	cp -f "$(-vbox-src-vmdk)" "$$($(vm)-dest-vmdk)"
+	echo "$$$$$(call normalize_id,_VM_VBOX_DATA__$(vm))" > "$$@"
 	@echo "Assigning disk UUID..." && set -x; \
-	UUID_RAW=$$$$(VBoxManage internalcommands sethduuid "$$($(vm)-dest-vmdk)" 2>&1) && \
+	UUID_RAW=$$$$(VBoxManage internalcommands sethduuid "$$($(vm)-vbox-dest-vmdk)" 2>&1) && \
 	UUID_EXTRACT=$$$$(echo -n "$$$$UUID_RAW" | \
 				 grep -Po '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}') && \
 	[[ -n "$$$$UUID_EXTRACT" ]] || exit 1 && \
-	sed -i -e 's/{{TEMPLATE_DISK_UUID}}/'"$$$$UUID_EXTRACT"'/g' "$$($(vm)-vbox-file)"
+	sed -i -e 's/{{TEMPLATE_DISK_UUID}}/'"$$$$UUID_EXTRACT"'/g' "$$@"
+
+export $(call normalize_id,_VM_VBOX_DATA__$(vm)):=$$(vbox-prj-template)
+
+endef
+
+# use vm-type = vbox to generate them
+define vm_gen_vbox_rules=
+.PHONY: $(vm) $(vm)_clean
+#@ $(vm) VirtualBox project build goal
+$(vm)-vbox-dest-vmdk := $(-vm-dest-dir)/$(-vm-name).vmdk
+$$($(vm)-vbox-dest-vmdk): $(-vbox-src-vmdk)
+	mkdir -p "$(-vm-dest-dir)"
+	cp -f "$$<" "$$@"
+$(vm_gen_vbox_prj_rule)
+$(vm): $$($(vm)-vbox-dest-vmdk) $$($(vm)-vbox-prj)
 
 $(vm)_clean:
 	rm -rf "$(-vm-dest-dir)"
-
-export $(call normalize_id,_VM_VBOX_DATA__$(vm)):=$$(vbox-prj-template)
 
 endef
 

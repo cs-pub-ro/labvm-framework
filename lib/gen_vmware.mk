@@ -51,7 +51,7 @@ memsize = "$(-vmware-ramsize)"
 mem.hotadd = "TRUE"
 scsi0.virtualDev = "lsilogic"
 scsi0.present = "TRUE"
-scsi0:0.fileName = "$(notdir $($(vm)-dest-vmdk))"
+scsi0:0.fileName = "$(notdir $($(vm)-vmware-dest-vmdk))"
 scsi0:0.present = "TRUE"
 sata0.present = "TRUE"
 sata0:1.deviceType = "cdrom-raw"
@@ -78,16 +78,28 @@ vhv.enable = "FALSE"
 ehci.present = "TRUE"
 endef
 
-define vm_gen_vmware_rules=
-.PHONY: $(vm)
-$(vm)-vmx-file := $(-vm-dest-dir)/$(-vm-name).vmx
-$(vm)-dest-vmdk := $(-vm-dest-dir)/$(-vm-name).vmdk
-$(vm): $(-vbox-src-vmdk)
+define vm_gen_vmware_prj_rule=
+$(vm)-vmx-prj := $(-vm-dest-dir)/$(-vm-name).vmx
+$$($(vm)-vmx-prj):
 	mkdir -p "$(-vm-dest-dir)"
-	echo "$$$$$(call normalize_id,_VM_VMWARE_DATA__$(vm))" > "$$($(vm)-vmx-file)"
-	cp -f "$(-vmware-src-vmdk)" "$$($(vm)-dest-vmdk)"
+	echo "$$$$$(call normalize_id,_VM_VMWARE_DATA__$(vm))" > "$$@"
 
 export $(call normalize_id,_VM_VMWARE_DATA__$(vm)):=$$(vmware-prj-template)
+
+endef
+
+define vm_gen_vmware_rules=
+.PHONY: $(vm) $(vm)_clean
+#@ $(vm) VMware project build goal
+$(vm)-vmware-dest-vmdk := $(-vm-dest-dir)/$(-vm-name).vmdk
+$$($(vm)-vmware-dest-vmdk): $(-vmware-src-vmdk)
+	mkdir -p "$(-vm-dest-dir)"
+	cp -f "$$<" "$$@"
+$(vm_gen_vmware_prj_rule)
+$(vm): $$($(vm)-vmware-dest-vmdk) $$($(vm)-vmx-prj)
+
+$(vm)_clean:
+	rm -rf "$(-vm-dest-dir)"
 
 endef
 
