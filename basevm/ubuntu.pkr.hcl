@@ -11,7 +11,10 @@ variables {
   vm_name = "basevm"
   vm_pause = 0
   vm_debug = 0
-  base_scripts_src = "../scripts/"
+  vm_scripts_src = "../scripts/"
+  vm_extra_files = []
+  vm_prepare_script = "$VM_SCRIPTS_DIR/base-prepare.sh"
+  vm_install_base = "$VM_SCRIPTS_DIR/base-debian.d/"
   qemu_unmap = false
   qemu_ssh_forward = 20022
   disk_size = 8192
@@ -31,6 +34,7 @@ locals {
     "VM_SCRIPTS_DIR=${local.scripts_dir}",
   ]
   sudo = "{{.Vars}} sudo -E -S bash -e '{{.Path}}'"
+  provision_init = "set -e; source ${local.scripts_dir}/lib/base.sh; @import 'vmrunner';"
 }
 
 source "qemu" "base-ubuntu" {
@@ -88,14 +92,28 @@ build {
     environment_vars = local.envs
   }
   provisioner "file" {
-    sources = [var.base_scripts_src]
+    sources = concat(
+      [var.vm_scripts_src],
+      (length(var.vm_extra_files) == 0 ? [] : var.vm_extra_files),
+    )
     destination = "${local.scripts_dir}/"
   }
 
   provisioner "shell" {
-    # run the `base-debian` provisioning scripts
+    # run the base preparation script (if any)
     inline = [
-      "bash $VM_SCRIPTS_DIR/install.sh $VM_SCRIPTS_DIR/base-debian.d/"
+      "${local.provision_init}",
+      "vm_run_script --optional \"${var.vm_prepare_script}\""
+    ]
+    expect_disconnect = true
+    execute_command = local.sudo
+    environment_vars = local.envs
+  }
+  provisioner "shell" {
+    # run the base provisioning scripts
+    inline = [
+      "${local.provision_init}",
+      "vm_run_scripts --optional \"${var.vm_install_base}\""
     ]
     expect_disconnect = true
     execute_command = local.sudo
