@@ -11,9 +11,10 @@ variables {
   vm_name = "basevm"
   vm_pause = 0
   vm_debug = 0
+  base_scripts_src = "../scripts/"
   qemu_unmap = false
   qemu_ssh_forward = 20022
-  disk_size = 5120
+  disk_size = 8192
   source_image = "https://releases.ubuntu.com/22.04/ubuntu-22.04.3-live-server-amd64.iso"
   source_checksum = "none"
   use_backing_file = false
@@ -24,14 +25,15 @@ variables {
 }
 
 locals {
+  scripts_dir = "/opt/vm-scripts"
   envs = [
     "VM_DEBUG=${var.vm_debug}",
-    "INSTALL_DIR=/home/student/install"
+    "VM_SCRIPTS_DIR=${local.scripts_dir}",
   ]
   sudo = "{{.Vars}} sudo -E -S bash -e '{{.Path}}'"
 }
 
-source "qemu" "ubuntu-22-base" {
+source "qemu" "base-ubuntu" {
   // VM Info:
   vm_name       = var.vm_name
   headless      = false
@@ -75,13 +77,27 @@ source "qemu" "ubuntu-22-base" {
 }
 
 build {
-  sources = ["sources.qemu.ubuntu-22-base"]
+  sources = ["sources.qemu.base-ubuntu"]
 
   provisioner "shell" {
-    scripts = [
-      "scripts/00-base.sh",
-      "scripts/90-cleanup.sh",
+    inline = [
+      "rm -rf $VM_SCRIPTS_DIR && mkdir -p $VM_SCRIPTS_DIR",
+      "chown ${var.ssh_username}:${var.ssh_username} $VM_SCRIPTS_DIR -R"
     ]
+    execute_command = local.sudo
+    environment_vars = local.envs
+  }
+  provisioner "file" {
+    sources = [var.base_scripts_src]
+    destination = "${local.scripts_dir}/"
+  }
+
+  provisioner "shell" {
+    # run the `base-debian` provisioning scripts
+    inline = [
+      "bash $VM_SCRIPTS_DIR/install.sh $VM_SCRIPTS_DIR/base-debian.d/"
+    ]
+    expect_disconnect = true
     execute_command = local.sudo
     environment_vars = local.envs
   }
