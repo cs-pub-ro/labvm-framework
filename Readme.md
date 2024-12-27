@@ -65,23 +65,22 @@ make basevm_edit PAUSE=1 DEBUG=1
 
 ## Derivation & Customization
 
-If you want to create your own custom VMs using this as base image, it is
+If you want to create your own custom VMs using this as base image,
 you can either fork this repository or include it as git submodule
 (recommended):
 
 ```sh
 git submodule init
 git submodule add https://github.com/cs-pub-ro/labvm-framework.git framework
-cp -r framework/template/* ./
+cp -r framework/example/* ./
 ```
 
 Afterwards, you must modify the Makefile and make `FRAMEWORK_DIR` point to the
-framework's relative directory (see TODOs inside the template), see:
-[packer file](./template/examplevm/example.pkr.hcl) &
-[provisioning scripts](./template/examplevm/scripts/)!
+framework's relative directory, see:
+[example Makefile](./example/examplevm/Makefile) and the
+[generic layer](./layers/generic/Readme.md)!
 
 Also check out other VM projects using it:
 
 - [Computer Networks Lab VM](https://github.com/cs-pub-ro/RL-lab-vm)
 - [Introduction to CyberSecurity Lab VM](https://github.com/cs-pub-ro/ISC-lab-vm)
-
