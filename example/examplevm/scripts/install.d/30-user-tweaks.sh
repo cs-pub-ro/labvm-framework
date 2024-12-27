@@ -1,4 +1,5 @@
 #!/bin/bash
+[[ -n "$__INSIDE_VM_RUNNER" ]] || { echo "Only call within VM runner!" >&2; return 1; }
 # User account (student) tweaks
 
 # this will be executed as the `student` user

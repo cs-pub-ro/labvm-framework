@@ -1,6 +1,6 @@
 #!/bin/bash
+[[ -n "$__INSIDE_VM_RUNNER" ]] || { echo "Only call within VM runner!" >&2; return 1; }
 # VM install initialization
-[[ "$INSIDE_INSTALL_SCRIPT" == "1" ]] || { echo "Direct calls not supported!">&2; exit 5; }
 
 # install some base dependencies
 apt-get install --no-install-recommends -y \
