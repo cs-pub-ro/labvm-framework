@@ -10,6 +10,7 @@ define nl
 $(blank)
 $(blank)
 endef
+comma := ,
 
 normalize_id=$(subst -,_,$1)
 
@@ -22,4 +23,8 @@ _def_value = $(if $($(1)),$($(1)),$(2))
 
 # macro which sets a packer variable, if set
 _packer_var = $(if $(2),-var "$(1)=$(2)")
+
+# macro for generating a JSON list of strings
+_packer_json_list_tmp = $(foreach val,$(1),"$(val)",),
+_packer_json_list = [$(subst $(comma)$(comma),,$(_packer_json_list_tmp))]
 
