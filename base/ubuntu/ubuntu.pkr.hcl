@@ -11,10 +11,10 @@ variables {
   vm_name = "basevm"
   vm_pause = 0
   vm_debug = 0
-  vm_scripts_src = "../scripts/"
-  vm_extra_files = []
+  vm_scripts_dir = "scripts/"
   vm_prepare_script = "$VM_SCRIPTS_DIR/base-prepare.sh"
   vm_install_base = "$VM_SCRIPTS_DIR/base-debian.d/"
+  vm_ubuntu_ver = "22"
   qemu_unmap = false
   qemu_ssh_forward = 20022
   disk_size = 8192
@@ -25,6 +25,10 @@ variables {
   boot_wait = "5s"
   ssh_username = "student"
   ssh_password = "student"
+}
+variable "vm_scripts_list" {
+  type    = list(string)
+  default = []
 }
 
 locals {
@@ -85,7 +89,7 @@ build {
 
   provisioner "shell" {
     inline = [
-      "rm -rf $VM_SCRIPTS_DIR && mkdir -p $VM_SCRIPTS_DIR",
+      "mkdir -p $VM_SCRIPTS_DIR",
       "chown ${var.ssh_username}:${var.ssh_username} $VM_SCRIPTS_DIR -R"
     ]
     execute_command = local.sudo
@@ -93,8 +97,7 @@ build {
   }
   provisioner "file" {
     sources = concat(
-      [var.vm_scripts_src],
-      (length(var.vm_extra_files) == 0 ? [] : var.vm_extra_files),
+      (var.vm_scripts_dir != "" ? [var.vm_scripts_dir] : var.vm_scripts_list),
     )
     destination = "${local.scripts_dir}/"
   }

@@ -10,6 +10,7 @@ FRAMEWORK_DIR ?= ..
 # you can also modify USER_CONFIG_DIR (where config.local.mk is loaded from)
 USER_CONFIG_DIR = ..
 include $(FRAMEWORK_DIR)/framework.mk
+include $(FRAMEWORK_DIR)/base/ubuntu/build.mk
 include $(FRAMEWORK_DIR)/layers/generic/build.mk
 include $(FRAMEWORK_DIR)/lib/gen_vm_combo.mk
 
@@ -17,13 +18,9 @@ include $(FRAMEWORK_DIR)/lib/gen_vm_combo.mk
 DEFAULT_GOAL = examplevm
 INIT_GOAL = examplevm
 
-# Fresh Ubuntu Server base VM
-ubuntu-ver = 22
-base-name = ubuntu_$(ubuntu-ver)_base
-base-packer-src = $(FRAMEWORK_DIR)/basevm
-base-src-image = $(BASE_VM_INSTALL_ISO)
-# VM destination file (automatically generated var.)
-#base-dest-image = $(BUILD_DIR)/$(basevm-name)/$(basevm-name).qcow2
+# Ubuntu Server 22.04 base VM
+$(eval $(call vm_new_base_ubuntu,base))
+base-ver = 22
 
 # Example VM with customizations
 $(eval $(call vm_new_layer_generic,examplevm))
@@ -53,7 +50,7 @@ cloudvm-packer-src = $(FRAMEWORK_DIR)/cloudvm
 cloudvm-src-from = examplevm
 
 # list with all VMs to generate rules for (note: use dependency ordering!)
-build-vms += basevm examplevm vbox vmware combovm cloudvm
+build-vms += base examplevm vbox vmware combovm cloudvm
 
 $(call eval_common_rules)
 $(call eval_all_vm_rules)

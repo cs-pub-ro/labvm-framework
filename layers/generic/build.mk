@@ -3,7 +3,7 @@
 ## Variables  you can override them inside your Makefile):
 
 # scripts relative to the current makefile
-VM_GENERIC_SCRIPTS_DIR ?= scripts
+VM_GENERIC_SCRIPTS_DIR ?= $(abspath ./scripts)/
 # generic layer's packer source dir
 VM_GENERIC_PKR_SRC ?= $(FRAMEWORK_DIR)/layers/generic
 # source (base) target to use
