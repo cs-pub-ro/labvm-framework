@@ -10,6 +10,7 @@ FRAMEWORK_DIR ?= ..
 # you can also modify USER_CONFIG_DIR (where config.local.mk is loaded from)
 USER_CONFIG_DIR = ..
 include $(FRAMEWORK_DIR)/framework.mk
+include $(FRAMEWORK_DIR)/layers/generic/build.mk
 include $(FRAMEWORK_DIR)/lib/gen_vm_combo.mk
 
 # set default goals
@@ -18,17 +19,17 @@ INIT_GOAL = examplevm
 
 # Fresh Ubuntu Server base VM
 ubuntu-ver = 22
-basevm-name = ubuntu_$(ubuntu-ver)_base
-basevm-packer-src = $(FRAMEWORK_DIR)/basevm
-basevm-src-image = $(BASE_VM_INSTALL_ISO)
+base-name = ubuntu_$(ubuntu-ver)_base
+base-packer-src = $(FRAMEWORK_DIR)/basevm
+base-src-image = $(BASE_VM_INSTALL_ISO)
 # VM destination file (automatically generated var.)
-#basevm-dest-image = $(BUILD_DIR)/$(basevm-name)/$(basevm-name).qcow2
+#base-dest-image = $(BUILD_DIR)/$(basevm-name)/$(basevm-name).qcow2
 
 # Example VM with customizations
-examplevm-ver = 2023.01
+$(eval $(call vm_new_layer_generic,examplevm))
+examplevm-ver = 2024.01
 examplevm-name = examplevm_$(examplevm-ver)
-examplevm-packer-src = ./examplevm
-examplevm-src-from = basevm
+examplevm-copy-scripts = $(abspath ./examplevm/scripts)/
 
 # Export example to VirtualBox & VMware
 vbox-name = example_vbox_$(examplevm-ver)
