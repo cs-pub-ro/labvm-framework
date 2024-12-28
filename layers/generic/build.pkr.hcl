@@ -39,7 +39,7 @@ locals {
     "VM_SCRIPTS_DIR=${local.scripts_dir}",
     "VM_AUTHORIZED_KEYS=${basename(var.vm_authorized_keys)}"
   ]
-  sudo = "{{.Vars}} sudo -E -S bash -ex '{{.Path}}'"
+  sudo = "{{.Vars}} sudo -E -S bash -e '{{.Path}}'"
   provision_init = "set -e; source $VM_SCRIPTS_DIR/lib/base.sh; @import 'vmrunner';"
 }
 
@@ -99,7 +99,8 @@ build {
     # run the preparation script (if any)
     inline = [
       "${local.provision_init}",
-      "vm_run_script --optional \"${var.vm_prepare_script}\""
+      "[[ -n '${var.vm_prepare_script}' ]] || { sh_log_info 'SKIP prepare script!'; exit 0; }",
+      "vm_run_script \"${var.vm_prepare_script}\""
     ]
     expect_disconnect = true
     execute_command = local.sudo
@@ -109,7 +110,8 @@ build {
     # run the first stage scripts (where a reboot is properly expected)
     inline = [
       "${local.provision_init}",
-      "vm_run_scripts --optional \"${var.vm_install_stage1}\""
+      "[[ -n '${var.vm_install_stage1}' ]] || { sh_log_info 'SKIP stage 1!'; exit 0; }",
+      "vm_run_scripts \"${var.vm_install_stage1}\""
     ]
     expect_disconnect = true
     execute_command = local.sudo
@@ -119,7 +121,8 @@ build {
     # run the second stage scripts
     inline = [
       "${local.provision_init}",
-      "vm_run_scripts --optional \"${var.vm_install_stage2}\""
+      "[[ -n '${var.vm_install_stage2}' ]] || { sh_log_info 'SKIP stage 2!'; exit 0; }",
+      "vm_run_scripts \"${var.vm_install_stage2}\""
     ]
     execute_command = local.sudo
     environment_vars = local.envs

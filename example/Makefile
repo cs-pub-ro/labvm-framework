@@ -27,7 +27,9 @@ base-ver = 22
 $(call vm_new_layer_generic,examplevm)
 examplevm-ver = 2024.01
 examplevm-name = examplevm_$(examplevm-ver)
-examplevm-copy-scripts = $(abspath ./examplevm/scripts)/
+# always update scripts from framework (prevent re-building base on changes)
+examplevm-copy-scripts = $(abspath $(FRAMEWORK_DIR)/scripts)/
+examplevm-copy-scripts += $(abspath ./examplevm/scripts)/
 
 # Export example to VirtualBox & VMware
 vbox-name = example_vbox_$(examplevm-ver)
@@ -49,6 +51,8 @@ combovm-src-from = examplevm
 $(call vm_new_layer_cloud,cloud)
 cloud-name = ubuntu_$(base-ver)_cloud
 cloud-src-from = examplevm
+cloud-copy-scripts = $(abspath $(FRAMEWORK_DIR)/scripts)/
+cloud-copy-scripts += $(VM_CLOUD_SCRIPTS_DIR)/
 cloud-copy-scripts += $(abspath ./cloud/script-overrides)/
 
 # list with all VMs to generate rules for (note: use dependency ordering!)

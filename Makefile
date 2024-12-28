@@ -6,6 +6,7 @@
 FRAMEWORK_DIR ?= .
 include $(FRAMEWORK_DIR)/framework.mk
 include $(FRAMEWORK_DIR)/base/ubuntu/build.mk
+include $(FRAMEWORK_DIR)/layers/generic/build.mk
 include $(FRAMEWORK_DIR)/layers/cloud/build.mk
 
 # set default goal

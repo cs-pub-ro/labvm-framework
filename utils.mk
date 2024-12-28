@@ -29,3 +29,7 @@ _packer_var = $(if $(2),-var "$(1)=$(2)")
 _packer_json_list_tmp = $(foreach val,$(1),"$(val)",),
 _packer_json_list = [$(subst $(comma)$(comma),,$(_packer_json_list_tmp))]
 
+# macro for checking whether a base file $(1) exists in a path $(2)
+# returns the full path to the file if found, empty otherwise
+_find_file_in_path = $(firstword $(wildcard $(2:%=%/$(1))))
+
