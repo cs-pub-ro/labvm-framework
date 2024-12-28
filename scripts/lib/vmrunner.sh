@@ -34,7 +34,8 @@ function vm_run_scripts() {
 		__SCRIPT_NAME="$(basename "$file")"
 		sh_log_info "> Running $__SCRIPT_NAME"
 		source "$file"
-	done < <(find "$SCRIPTS_DIR" '(' "${FIND_ARGS[@]}" ')' -print0 | sort -n -z)
+	done < <(find -L "$SCRIPTS_DIR" '(' "${FIND_ARGS[@]}" ')' -print0 | sort -n -z)
+	# note: ^^ use -L is to follow symlinks!
 }
 
 # Executes a single script

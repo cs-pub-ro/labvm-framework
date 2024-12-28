@@ -10,6 +10,7 @@ VM_CLOUD_SRC_FROM ?= main
 define _vm_new_layer_cloud_tpl
 $(call check-var,_vm_new_layer_generic_tpl)$(_vm_new_layer_generic_tpl)
 $(1)-name ?= $(1)
+$(1)-script-prepare ?= cloud-prepare.sh
 $(1)-script-stage1 ?= install-cloud.d
 $(1)-copy-scripts ?= $(VM_CLOUD_SCRIPTS_DIR)
 $(1)-src-from ?= $$(VM_CLOUD_SRC_FROM)
