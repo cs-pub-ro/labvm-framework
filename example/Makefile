@@ -12,6 +12,7 @@ USER_CONFIG_DIR = ..
 include $(FRAMEWORK_DIR)/framework.mk
 include $(FRAMEWORK_DIR)/base/ubuntu/build.mk
 include $(FRAMEWORK_DIR)/layers/generic/build.mk
+include $(FRAMEWORK_DIR)/layers/cloud/build.mk
 include $(FRAMEWORK_DIR)/lib/gen_vm_combo.mk
 
 # set default goals
@@ -44,13 +45,14 @@ combovm-type = vm-combo
 combovm-vmname = Example Combo VM
 combovm-src-from = examplevm
 
-# Cloud-init image (based on examplevm!, see src-image)
-cloudvm-name = ubuntu_$(ubuntu-ver)_cloud
-cloudvm-packer-src = $(FRAMEWORK_DIR)/cloudvm
-cloudvm-src-from = examplevm
+# Cloud image
+$(call vm_new_layer_cloud,cloud)
+cloud-name = ubuntu_$(base-ver)_cloud
+cloud-src-from = examplevm
+cloud-copy-scripts += $(abspath ./cloud/script-overrides)/
 
 # list with all VMs to generate rules for (note: use dependency ordering!)
-build-vms += base examplevm vbox vmware combovm cloudvm
+build-vms += base examplevm vbox vmware combovm cloud
 
 $(call eval_common_rules)
 $(call eval_all_vm_rules)

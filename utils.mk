@@ -11,6 +11,7 @@ $(blank)
 $(blank)
 endef
 comma := ,
+dollar := $$
 
 normalize_id=$(subst -,_,$1)
 

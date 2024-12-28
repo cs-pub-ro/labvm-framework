@@ -6,6 +6,7 @@
 FRAMEWORK_DIR ?= .
 include $(FRAMEWORK_DIR)/framework.mk
 include $(FRAMEWORK_DIR)/base/ubuntu/build.mk
+include $(FRAMEWORK_DIR)/layers/cloud/build.mk
 
 # set default goal
 DEFAULT_GOAL = init
@@ -15,13 +16,13 @@ $(call vm_new_base_ubuntu,base)
 # VM destination file (automatically generated var.)
 #base-dest-image = $(BUILD_DIR)/$(base-name)/$(base-name).qcow2
 
-# Cloud-init image
-cloudvm-name = ubuntu_$(ubuntu-ver)_cloud
-cloudvm-packer-src = $(FRAMEWORK_DIR)/cloudvm
-cloudvm-src-from = base
+# Cloud image
+$(call vm_new_layer_cloud,cloud)
+cloud-name = ubuntu_$(base-ver)_cloud
+cloud-src-from = base
 
 # list with all VMs to generate rules for
-build-vms += base cloudvm
+build-vms += base cloud
 
 $(call eval_common_rules)
 $(call eval_all_vm_rules)
