@@ -23,8 +23,3 @@ rsync -ai --chown="root:root" --exclude "*.tpl" \
 sh_interpolate_vars "$(cat "$SRC/etc/cloud/cloud.cfg.tpl")" \
 	VM_USER="$VM_USER" > "/etc/cloud/cloud.cfg"
 
-# update grub to replace kernel cmdline
-GRUB_CMDLINE_VIRT="modprobe.blacklist=floppy console=ttyS0,115200n8 no_timer_check edd=off"
-sed -i "s/GRUB_CMDLINE_LINUX_DEFAULT=.*/GRUB_CMDLINE_LINUX_DEFAULT=\"$GRUB_CMDLINE_VIRT\"/g" /etc/default/grub
-update-grub
-
