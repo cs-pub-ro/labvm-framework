@@ -49,7 +49,7 @@ function vm_run_script() {
 	esac; shift; done
 	SCRIPT_FILE="$(vm_resolve_script "$1")"
 
-	if [[ -z "$SCRIPT_FILE" || ! -d "$SCRIPT_FILE" ]]; then
+	if [[ -z "$SCRIPT_FILE" || ! -f "$SCRIPT_FILE" ]]; then
 		[[ -z "$OPTIONAL" ]] || return 0
 		sh_log_error "vm_run_script: invalid script file: '$SCRIPT_FILE'"
 		return 1
