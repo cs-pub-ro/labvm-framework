@@ -1,6 +1,6 @@
 ## Cloud VM layer build macros
 
-## Variables  you can override them inside your Makefile):
+## Config variables: you can override them inside your Makefile):
 
 # scripts relative to the current makefile
 VM_CLOUD_SCRIPTS_DIR ?= $(abspath $(FRAMEWORK_DIR)/layers/cloud/scripts)/

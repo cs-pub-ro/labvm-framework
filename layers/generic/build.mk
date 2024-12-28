@@ -1,6 +1,6 @@
 ## Generic VM layer build macros
 
-## Variables  you can override them inside your Makefile):
+## Config variables: you can override them inside your Makefile):
 
 # scripts relative to the current makefile
 VM_GENERIC_SCRIPTS_DIR ?= $(abspath ./scripts)/

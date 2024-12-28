@@ -25,6 +25,7 @@ able to override them by inserting a new script, e.g., `02-overrides.sh`).
 Include the layer's `.mk`, and call the `vm_new_layer_cloud` macro:
 
 ```Makefile
+include $(FRAMEWORK_DIR)/layers/generic/build.mk
 include $(FRAMEWORK_DIR)/layers/cloud/build.mk
 
 # creates the `cloud` VM using defaults
