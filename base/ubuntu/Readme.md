@@ -15,7 +15,7 @@ Example makefile snippet using the built-in rules:
 include $(FRAMEWORK_DIR)/base/ubuntu/build.mk
 
 # creates the `base` VM (inherited by default by most layers)
-$(eval $(call vm_new_base_ubuntu,base))
+$(call vm_new_base_ubuntu,base)
 # e.g., override the name
 #base-name = Ubuntu_$(base-ver)_custom
 ```

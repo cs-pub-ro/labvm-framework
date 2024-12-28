@@ -19,11 +19,11 @@ DEFAULT_GOAL = examplevm
 INIT_GOAL = examplevm
 
 # Ubuntu Server 22.04 base VM
-$(eval $(call vm_new_base_ubuntu,base))
+$(call vm_new_base_ubuntu,base)
 base-ver = 22
 
 # Example VM with customizations
-$(eval $(call vm_new_layer_generic,examplevm))
+$(call vm_new_layer_generic,examplevm)
 examplevm-ver = 2024.01
 examplevm-name = examplevm_$(examplevm-ver)
 examplevm-copy-scripts = $(abspath ./examplevm/scripts)/

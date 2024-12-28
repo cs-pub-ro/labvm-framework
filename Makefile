@@ -11,7 +11,7 @@ include $(FRAMEWORK_DIR)/base/ubuntu/build.mk
 DEFAULT_GOAL = init
 
 # Ubuntu Server base VM
-$(eval $(call vm_new_base_ubuntu,base))
+$(call vm_new_base_ubuntu,base)
 # VM destination file (automatically generated var.)
 #base-dest-image = $(BUILD_DIR)/$(base-name)/$(base-name).qcow2
 

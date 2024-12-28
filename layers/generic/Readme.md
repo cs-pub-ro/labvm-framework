@@ -43,7 +43,7 @@ macro:
 include $(FRAMEWORK_DIR)/layers/generic/build.mk
 
 # creates the `main` VM using defaults
-$(eval $(call vm_new_layer_generic,main))
+$(call vm_new_layer_generic,main)
 # override the name and source scripts
 main-name = examplevm_$(examplevm-ver)
 # Note: make sure the directory ends with '/' so its contents are copied!
