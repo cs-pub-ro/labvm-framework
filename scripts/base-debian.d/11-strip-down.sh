@@ -8,7 +8,7 @@ sed -i '/^\/swap.img/d' /etc/fstab
 rm -f /swap.img
 
 # remove linux-firmware and the generic kernel
-apt-get -y purge -qq linux-generic linux-firmware || true
+pkg_remove --purge linux-generic linux-firmware intel-microcode amd64-microcode || true
 # remove some unnecessary packages
-apt-get -y purge -qq snapd ufw apport ubuntu-advantage-tools || true
+pkg_remove --purge snapd ufw apport ubuntu-advantage-tools || true
 

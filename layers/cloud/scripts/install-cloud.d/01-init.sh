@@ -5,8 +5,8 @@
 @import "systemd"
 
 # prepare package manager
-export DEBIAN_FRONTEND=noninteractive
-apt-get -y -qq update
+@import 'debian/packages.sh'
+pkg_init_update
 
 ## Configuration variables (override them inside env or add a next script, 
 ## e.g. 02-overrides.sh)

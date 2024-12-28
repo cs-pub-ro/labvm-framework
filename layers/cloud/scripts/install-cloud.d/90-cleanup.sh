@@ -8,8 +8,7 @@ rm -rf /var/lib/cloud/ /tmp/*
 rm -rf /var/log/*/*
 rm -f /var/log/* 2>/dev/null || true
 
-apt-get -y -qq autoremove || true
-apt-get -y -qq clean || true
+pkg_cleanup || true
 
 df -h
 
