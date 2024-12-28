@@ -13,9 +13,9 @@ variables {
   vm_debug = 0
   vm_noinstall = 0
   vm_scripts_dir = "scripts/"
-  vm_prepare_script = "$VM_SCRIPTS_DIR/vm-prepare.sh"
-  vm_install_stage1 = "$VM_SCRIPTS_DIR/install-stage1.d/"
-  vm_install_stage2 = "$VM_SCRIPTS_DIR/install-stage2.d/"
+  vm_prepare_script = "vm-prepare.sh"
+  vm_install_stage1 = "install-stage1.d/"
+  vm_install_stage2 = "install-stage2.d/"
   vm_authorized_keys = ""
   qemu_unmap = false
   qemu_ssh_forward = 20022
@@ -35,12 +35,12 @@ variable "vm_scripts_list" {
 locals {
   scripts_dir = "/opt/vm-scripts"
   envs = [
-    "VM_DEBUG=${var.vm_debug}",
+    "DEBUG=${var.vm_debug}", "VM_DEBUG=${var.vm_debug}",
     "VM_SCRIPTS_DIR=${local.scripts_dir}",
     "VM_AUTHORIZED_KEYS=${basename(var.vm_authorized_keys)}"
   ]
-  sudo = "{{.Vars}} sudo -E -S bash -e '{{.Path}}'"
-  provision_init = "set -e; source ${local.scripts_dir}/lib/base.sh; @import 'vmrunner';"
+  sudo = "{{.Vars}} sudo -E -S bash -ex '{{.Path}}'"
+  provision_init = "set -e; source $VM_SCRIPTS_DIR/lib/base.sh; @import 'vmrunner';"
 }
 
 source "qemu" "vm" {

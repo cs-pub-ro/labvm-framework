@@ -12,8 +12,8 @@ variables {
   vm_pause = 0
   vm_debug = 0
   vm_scripts_dir = "scripts/"
-  vm_prepare_script = "$VM_SCRIPTS_DIR/base-prepare.sh"
-  vm_install_base = "$VM_SCRIPTS_DIR/base-debian.d/"
+  vm_prepare_script = "base-prepare.sh"
+  vm_install_base = "base-debian.d/"
   vm_ubuntu_ver = "22"
   qemu_unmap = false
   qemu_ssh_forward = 20022
@@ -34,11 +34,11 @@ variable "vm_scripts_list" {
 locals {
   scripts_dir = "/opt/vm-scripts"
   envs = [
-    "VM_DEBUG=${var.vm_debug}",
+    "DEBUG=${var.vm_debug}", "VM_DEBUG=${var.vm_debug}",
     "VM_SCRIPTS_DIR=${local.scripts_dir}",
   ]
   sudo = "{{.Vars}} sudo -E -S bash -e '{{.Path}}'"
-  provision_init = "set -e; source ${local.scripts_dir}/lib/base.sh; @import 'vmrunner';"
+  provision_init = "set -e; source $VM_SCRIPTS_DIR/lib/base.sh; @import 'vmrunner';"
 }
 
 source "qemu" "base-ubuntu" {

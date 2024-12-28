@@ -2,6 +2,9 @@
 [[ -n "$__MOD_PATH" ]] || { echo "Note: only usable as module (with @import)!" >&2; return 1; }
 ## VM provisioning scripts
 
+# default base path
+VM_SCRIPTS_DIR=${VM_SCRIPTS_DIR:-/opt/vm-scripts}
+
 # Runs all .sh scripts inside a directory ($1), sorted by name.
 # It is recommended to prefix them with priority numbers (e.g. 01-init.sh)
 function vm_run_scripts() {
@@ -16,7 +19,7 @@ function vm_run_scripts() {
 		-*) sh_log_error "vm_run_scripts: invalid option: $1"; return 1 ;;
 		*) break; ;;
 	esac; shift; done
-	SCRIPTS_DIR="$1"
+	SCRIPTS_DIR="$(vm_resolve_script "$1")"
 
 	if [[ -z "$SCRIPTS_DIR" || ! -d "$SCRIPTS_DIR" ]]; then
 		[[ -z "$OPTIONAL" ]] || return 0
@@ -44,7 +47,7 @@ function vm_run_script() {
 		-*) sh_log_error "vm_run_scripts: invalid option: $1"; return 1 ;;
 		*) break; ;;
 	esac; shift; done
-	SCRIPT_FILE="$1"
+	SCRIPT_FILE="$(vm_resolve_script "$1")"
 
 	if [[ -z "$SCRIPT_FILE" || ! -d "$SCRIPT_FILE" ]]; then
 		[[ -z "$OPTIONAL" ]] || return 0
@@ -53,5 +56,16 @@ function vm_run_script() {
 	fi
 
 	source "$SCRIPT_FILE"
+}
+
+# resolves the path to a vm-scripts dir/file
+function vm_resolve_script() {
+	local FILE="$1"
+	if [[ "$FILE" == /* ]]; then
+		true  # absolute path, continue!
+	else
+		FILE="$VM_SCRIPTS_DIR/$FILE"
+	fi
+	echo -n "$FILE"
 }
 

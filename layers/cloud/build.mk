@@ -18,7 +18,7 @@ $(1)-packer-src = $(VM_CLOUD_PKR_SRC)
 $(1)-packer-args ?=
 $(1)-packer-args += -var "vm_scripts_dir=" -var 'vm_scripts_list=$$(call \
 	_packer_json_list,$$($(1)-copy-scripts))'
-$(1)-packer-args += -var 'vm_install_stage1=$$$$(dollar)VM_SCRIPTS_DIR/install-cloud.d/'
+$(1)-packer-args += -var 'vm_install_stage1=install-cloud.d/'
 $(1)-packer-args += -var "vm_authorized_keys=$$(VM_AUTHORIZED_KEYS)"
 $(1)-copy-scripts ?= $(VM_CLOUD_SCRIPTS_DIR)
 $(1)-src-from ?= $(VM_CLOUD_SRC_FROM)
