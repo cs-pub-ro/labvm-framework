@@ -2,6 +2,8 @@
 [[ -n "$__INSIDE_VM_RUNNER" ]] || { echo "Only call within VM runner!" >&2; return 1; }
 ## Cloud install initialization script
 
+@import "systemd"
+
 # prepare package manager
 export DEBIAN_FRONTEND=noninteractive
 apt-get -y -qq update
@@ -23,7 +25,5 @@ if [[ -f "/etc/vm-config/env.sh" ]]; then
 	source "/etc/vm-config/env.sh"
 fi
 
-echo "Waiting for the VM to fully boot..."
-while [ "$(systemctl is-system-running 2>/dev/null)" != "running" ] && \
-	[ "$(systemctl is-system-running 2>/dev/null)" != "degraded" ]; do sleep 2; done
+systemd_wait_for_boot
 
