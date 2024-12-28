@@ -10,7 +10,7 @@ EOF
 
 # prepare package manager
 export DEBIAN_FRONTEND=noninteractive
-apt-get -y -qq upgrade
+apt-get -y -qq update
 
 # disable TTY requirement for sudo
 sed -i "s/^.*requiretty/#Defaults requiretty/" /etc/sudoers
