@@ -50,11 +50,11 @@ full-copy-scripts += $(abspath ./main/scripts)/
 
 # Export the main VM to both VirtualBox & VMware using the ComboVM rules
 # [re]build with `make exported_clean exported`
-exported_name = $(vm-prefix)_exported
+exported-name = $(vm-prefix)_exported
 # must change the target's type to `vm-combo` for combo export rules
-exported_type = vm-combo
-exported_vmname = Example ComboVM
-exported_src-from = main
+exported-type = vm-combo
+exported-vmname = Example ComboVM
+exported-src-from = main
 
 # Cloud image based on full VM
 # [re]build with `make full_cloud_clean full_cloud`
@@ -69,7 +69,7 @@ full_cloud-extra-rules += $(vm_zerofree_rule)
 
 # List of targets to generate rules for (note: must manually order them
 # topologically, i.e. build dependencies before their targets)
-build-vms += base main full exported full_cloud
+build-vms = base main full exported full_cloud
 
 $(call eval_common_rules)
 $(call eval_all_vm_rules)
