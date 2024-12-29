@@ -19,6 +19,7 @@ variables {
   vm_prepare_script = "base-prepare.sh"
   vm_install_base = "base-debian.d/"
   vm_ubuntu_ver = "22"
+  vm_ubuntu_kernel_pkg = "linux-image-virtual"
   qemu_unmap = false
   qemu_ssh_forward = 20022
   disk_size = 8192
@@ -83,6 +84,7 @@ source "qemu" "base-ubuntu" {
       ssh_username = var.ssh_username,
       ssh_password = var.ssh_password,
       crypted_password = var.vm_crypted_password,
+      ubuntu_kernel_pkg = var.vm_ubuntu_kernel_pkg
     })
   }
 

@@ -29,6 +29,8 @@ autoinstall:
     allow-pw: true
   oem:
     install: false
+  kernel:
+    package: "${ubuntu_kernel_pkg}"
   packages:
     - open-vm-tools
     - whois

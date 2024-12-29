@@ -21,6 +21,9 @@ $(call vm_new_base_ubuntu,base)
 $(call vm_new_layer_cloud,cloud)
 cloud-name = ubuntu_$(base-ver)_cloud
 cloud-src-from = base
+# always update scripts from framework (prevent re-building base on changes)
+cloud-copy-scripts = $(abspath $(FRAMEWORK_DIR)/scripts)/
+cloud-copy-scripts += $(VM_CLOUD_SCRIPTS_DIR)
 
 # list with all VMs to generate rules for
 build-vms += base cloud
