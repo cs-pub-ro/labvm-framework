@@ -5,5 +5,8 @@
 
 SRC=$(sh_get_script_path)
 
-ln -sf "$SRC/common-snippets.d/ssh-authorized-keys.sh" "$SRC/install-cloud.d/32-ssh-authorized-keys.sh"
+
+# Alternative way of enabling snippets (not preferred as makes task ordering
+# difficult to understand)
+#ln -sf "$SRC/common-snippets.d/ssh-authorized-keys.sh" "$SRC/install-cloud.d/32-ssh-authorized-keys.sh"
 

@@ -48,7 +48,9 @@ function vm_run_script() {
 		-*) sh_log_error "vm_run_scripts: invalid option: $1"; return 1 ;;
 		*) break; ;;
 	esac; shift; done
+	# normalize: resolve path + .sh extension
 	SCRIPT_FILE="$(vm_resolve_script "$1")"
+	SCRIPT_FILE="${SCRIPT_FILE%.sh}.sh"
 
 	if [[ -z "$SCRIPT_FILE" || ! -f "$SCRIPT_FILE" ]]; then
 		[[ -z "$OPTIONAL" ]] || return 0
