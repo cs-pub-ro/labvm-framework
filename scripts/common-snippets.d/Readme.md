@@ -1,7 +1,7 @@
 # VM Framework - Common provisioning scripts
 
 This directory contains several common (but optional) Linux VM provisioning
-snippets such as `ssh-authorized-keys` etc.
+snippets such as `reboot`, `ssh-authorized-keys` etc.
 
 The snippets are synced into the base image by default, though they remain
 inactive. Thus, you must manually cherry pick and run them inside a VM

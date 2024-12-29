@@ -5,4 +5,3 @@
 # prepare package manager
 @import 'debian/packages.sh'
 pkg_init_update
-
