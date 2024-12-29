@@ -6,3 +6,5 @@
 @import 'debian/packages.sh'
 pkg_init_update
 
+VM_FULL_UPGRADE=${VM_FULL_UPGRADE:-1}
+
