@@ -13,6 +13,7 @@ include $(FRAMEWORK_DIR)/framework.mk
 include $(FRAMEWORK_DIR)/base/ubuntu/build.mk
 include $(FRAMEWORK_DIR)/layers/generic/build.mk
 include $(FRAMEWORK_DIR)/layers/cloud/build.mk
+include $(FRAMEWORK_DIR)/layers/full-featured/build.mk
 include $(FRAMEWORK_DIR)/lib/gen_vm_combo.mk
 
 # set default goals
@@ -30,6 +31,12 @@ examplevm-name = examplevm_$(examplevm-ver)
 # always update scripts from framework (prevent re-building base on changes)
 examplevm-copy-scripts = $(abspath $(FRAMEWORK_DIR)/scripts)/
 examplevm-copy-scripts += $(abspath ./examplevm/scripts)/
+
+$(call vm_new_layer_full_featured,fullvm)
+fullvm-name = example_full_$(examplevm-ver)
+fullvm-copy-scripts = $(abspath $(FRAMEWORK_DIR)/scripts)/
+fullvm-copy-scripts += $(VM_FULL_FEATURED_SCRIPTS_DIR)
+fullvm-copy-scripts += $(abspath ./examplevm/scripts)/
 
 # Export example to VirtualBox & VMware
 vbox-name = example_vbox_$(examplevm-ver)
@@ -49,14 +56,22 @@ combovm-src-from = examplevm
 
 # Cloud image
 $(call vm_new_layer_cloud,cloud)
-cloud-name = ubuntu_$(base-ver)_cloud
+cloud-name = example_$(base-ver)_cloud
 cloud-src-from = examplevm
 cloud-copy-scripts = $(abspath $(FRAMEWORK_DIR)/scripts)/
 cloud-copy-scripts += $(VM_CLOUD_SCRIPTS_DIR)
 cloud-copy-scripts += $(abspath ./cloud/script-overrides)/
 
+# Cloud image based on full-featured layer
+$(call vm_new_layer_cloud,full_cloud)
+full_cloud-name = example_full_$(base-ver)_cloud
+full_cloud-src-from = fullvm
+full_cloud-copy-scripts = $(abspath $(FRAMEWORK_DIR)/scripts)/
+full_cloud-copy-scripts += $(VM_CLOUD_SCRIPTS_DIR)
+full_cloud-copy-scripts += $(abspath ./cloud/script-overrides)/
+
 # list with all VMs to generate rules for (note: use dependency ordering!)
-build-vms += base examplevm vbox vmware combovm cloud
+build-vms += base examplevm fullvm vbox vmware combovm cloud full_cloud
 
 $(call eval_common_rules)
 $(call eval_all_vm_rules)

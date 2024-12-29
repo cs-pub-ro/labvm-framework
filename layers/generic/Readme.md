@@ -52,3 +52,11 @@ main-copy-scripts = $(abspath ./main/scripts)/
 #main-copy-scripts += $(abspath ./vm-prepare.sh) $(abspath ./overrides)/
 ```
 
+Note: this generic layer does NOT customize anything on the VM image -- it is
+meant to be used as a starter layer for further extensions, so you must add your
+own install snippets inside the appropiate provisioning directories executed.
+
+See the [full-featured](../full-featured/Readme.md) layer for an advanced
+example of defining layers on top of this, or the [example 
+template](../../example).
+
