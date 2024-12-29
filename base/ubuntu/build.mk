@@ -18,8 +18,12 @@ $(1)-name ?= ubuntu_$$($(1)-ver)_base
 $(1)-packer-src = $$(BASE_UBUNTU_PKR_SRC)
 $(1)-packer-args ?=
 $(1)-packer-args += -var 'vm_scripts_dir=' \
-	-var 'vm_scripts_list=$$(-vm-copy-scripts-list)'
-$(1)-packer-args += -var "vm_ubuntu_ver=$$($(1)-ver)"
+	-var 'vm_scripts_list=$$(-vm-copy-scripts-list)' \
+	$$(call _packer_var,vm_hostname,$$(VM_HOSTNAME)) \
+	$$(call _packer_var,vm_locale,$$(VM_LOCALE)) \
+	$$(call _packer_var,vm_timezone,$$(VM_TIMEZONE)) \
+	$$(call _packer_var,vm_crypted_password,$$$$(VM_CRYPTED_PASSWORD)) \
+	$$(call _packer_var,vm_ubuntu_ver,$$($(1)-ver))
 $(1)-copy-scripts ?= $$(BASE_UBUNTU_SCRIPTS_DIR)
 $(1)-src-image ?= $$(UBUNTU_$$($(1)-ver)_ISO)
 

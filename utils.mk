@@ -23,7 +23,7 @@ rwildcard=$(foreach d,$(wildcard $(1:=/*)),$(call rwildcard,$d,$2) $(filter $(su
 _def_value = $(if $($(1)),$($(1)),$(2))
 
 # macro which sets a packer variable, if set
-_packer_var = $(if $(2),-var "$(1)=$(2)")
+_packer_var = $(if $(2),-var '$(1)=$(2)')
 
 # macro for generating a JSON list of strings
 _packer_json_list_tmp = $(foreach val,$(1),"$(val)",),

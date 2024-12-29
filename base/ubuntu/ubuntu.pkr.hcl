@@ -9,6 +9,10 @@ packer {
 
 variables {
   vm_name = "basevm"
+  vm_locale = "en_US"
+  vm_timezone = "Europe/Bucharest"
+  vm_hostname = "ubuntu"
+  vm_crypted_password = "TODO"
   vm_pause = 0
   vm_debug = 0
   vm_scripts_dir = "scripts/"
@@ -23,8 +27,8 @@ variables {
   use_backing_file = false
   output_directory = "/tmp/packer-out"
   boot_wait = "5s"
-  ssh_username = "student"
-  ssh_password = "student"
+  ssh_username = "TODO"
+  ssh_password = "TODO"
 }
 variable "vm_scripts_list" {
   type    = list(string)
@@ -70,7 +74,18 @@ source "qemu" "base-ubuntu" {
   host_port_min     = var.qemu_ssh_forward
   host_port_max     = var.qemu_ssh_forward
 
-  http_directory    = "http"
+  http_content = {
+    "/meta-data" = "",
+    "/user-data" = templatefile("${path.root}/preseed/cloud-config.yaml.pkrtpl", {
+      hostname = var.vm_hostname,
+      locale = var.vm_locale,
+      timezone = var.vm_timezone,
+      ssh_username = var.ssh_username,
+      ssh_password = var.ssh_password,
+      crypted_password = var.vm_crypted_password,
+    })
+  }
+
   boot_wait = (var.use_backing_file ? null : var.boot_wait)
   boot_command = (var.use_backing_file ? null : [
     "c<wait>",

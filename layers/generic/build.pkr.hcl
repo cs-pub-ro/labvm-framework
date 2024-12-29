@@ -24,8 +24,8 @@ variables {
   source_checksum = "none"
   use_backing_file = true
   output_directory = "/tmp/packer-out"
-  ssh_username = "student"
-  ssh_password = "student"
+  ssh_username = "TODO"
+  ssh_password = "TODO"
 }
 variable "vm_scripts_list" {
   type    = list(string)

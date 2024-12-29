@@ -1,4 +1,5 @@
 #cloud-config
+# https://canonical-subiquity.readthedocs-hosted.com/en/latest/
 
 autoinstall:
   version: 1
@@ -13,32 +14,30 @@ autoinstall:
         uri: http://ports.ubuntu.com/ubuntu-ports
   early-commands:
     - sudo systemctl stop ssh
-  locale: en_US
+  locale: ${locale}
   keyboard:
     layout: us
   storage:
     layout:
       name: direct
   identity:
-    hostname: ubuntu
-    username: student
-    password: "$6$student$80xtci/7xSdee1jwh1oafzFkR6TQDMkWwnqHNIDFJv7cjoSr9A4d9aZ0ACPsJYUdkLEksfizTQOBYiWq2tBT11"
+    hostname: "${hostname}"
+    username: "${ssh_username}"
+    password: '${crypted_password}'
   ssh:
     install-server: true
     allow-pw: true
+  oem:
+    install: false
   packages:
-    - linux-virtual
-    - openssh-server
     - open-vm-tools
     - whois
-    - zsh
     - wget
-    - vim
   user-data:
     disable_root: false
-    timezone: Europe/Bucharest
+    timezone: ${timezone}
   late-commands:
     - sed -i -e 's/^#\?PasswordAuthentication.*/PasswordAuthentication yes/g' /target/etc/ssh/sshd_config
-    - echo 'student ALL=(ALL) NOPASSWD:ALL' > /target/etc/sudoers.d/student
-    - curtin in-target --target=/target -- chmod 440 /etc/sudoers.d/student
+    - echo '${ssh_username} ALL=(ALL) NOPASSWD:ALL' > /target/etc/sudoers.d/${ssh_username}
+    - curtin in-target --target=/target -- chmod 440 /etc/sudoers.d/${ssh_username}
 
