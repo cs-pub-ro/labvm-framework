@@ -15,6 +15,7 @@ include $(FRAMEWORK_DIR)/layers/generic/build.mk
 include $(FRAMEWORK_DIR)/layers/cloud/build.mk
 include $(FRAMEWORK_DIR)/layers/full-featured/build.mk
 include $(FRAMEWORK_DIR)/lib/gen_vm_combo.mk
+include $(FRAMEWORK_DIR)/lib/zerofree.mk
 
 # set default goals
 DEFAULT_GOAL = examplevm
@@ -61,6 +62,7 @@ cloud-src-from = examplevm
 cloud-copy-scripts = $(abspath $(FRAMEWORK_DIR)/scripts)/
 cloud-copy-scripts += $(VM_CLOUD_SCRIPTS_DIR)
 cloud-copy-scripts += $(abspath ./cloud/script-overrides)/
+cloud-extra-rules += $(vm_zerofree_rule)
 
 # Cloud image based on full-featured layer
 $(call vm_new_layer_cloud,full_cloud)
@@ -69,6 +71,7 @@ full_cloud-src-from = fullvm
 full_cloud-copy-scripts = $(abspath $(FRAMEWORK_DIR)/scripts)/
 full_cloud-copy-scripts += $(VM_CLOUD_SCRIPTS_DIR)
 full_cloud-copy-scripts += $(abspath ./cloud/script-overrides)/
+full_cloud-extra-rules += $(vm_zerofree_rule)
 
 # list with all VMs to generate rules for (note: use dependency ordering!)
 build-vms += base examplevm fullvm vbox vmware combovm cloud full_cloud
