@@ -24,6 +24,10 @@ VM_AUTHORIZED_KEYS ?= $(abspath $(_find_file_in_path *authorized_keys*,\
 -vm-generic-stage2 = $(strip $(call _def_value,$(vm)-script-stage2,\
 		$(notdir $(call _find_file_in_path,install-stage2.d,$(-vm-copy-scripts)))))
 
+-vm-generic-extra-envs = $(call _def_value,$(vm)-extra-envs,)
+-vm-generic-extra-envs-var = [$(subst $(comma)$(comma),,$(strip $(-vm-generic-extra-envs)))]
+
+
 define _vm_new_layer_generic_tpl=
 $(1)-name ?= $(1)
 $(1)-packer-src = $$(VM_GENERIC_PKR_SRC)
@@ -33,9 +37,11 @@ $(1)-packer-args += -var 'vm_scripts_dir=' \
 	-var 'vm_prepare_script=$$(-vm-generic-prepare)' \
 	-var 'vm_install_stage1=$$(-vm-generic-stage1)' \
 	-var 'vm_install_stage2=$$(-vm-generic-stage2)' \
-	-var 'vm_authorized_keys=$$(VM_AUTHORIZED_KEYS)'
+	-var 'vm_authorized_keys=$$(VM_AUTHORIZED_KEYS)' \
+	-var 'vm_extra_envs=$$(-vm-generic-extra-envs-var)'
 $(1)-copy-scripts ?= $$(VM_GENERIC_SCRIPTS_DIR)
 $(1)-src-from ?= $$(VM_GENERIC_SRC_FROM)
+$(1)-extra-envs ?=
 
 endef
 # use with $(call vm_new_layer_generic,vm-id)

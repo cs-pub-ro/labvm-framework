@@ -31,14 +31,18 @@ variable "vm_scripts_list" {
   type    = list(string)
   default = []
 }
+variable "vm_extra_envs" {
+  type    = list(string)
+  default = []
+}
 
 locals {
   scripts_dir = "/opt/vm-scripts"
-  envs = [
+  envs = concat([
     "DEBUG=${var.vm_debug}", "VM_DEBUG=${var.vm_debug}",
     "VM_SCRIPTS_DIR=${local.scripts_dir}",
     "VM_AUTHORIZED_KEYS=${basename(var.vm_authorized_keys)}"
-  ]
+  ], var.vm_extra_envs)
   sudo = "{{.Vars}} sudo -E -S bash -e '{{.Path}}'"
   provision_init = "set -e; source $VM_SCRIPTS_DIR/lib/base.sh; @import 'vmrunner';"
 }
