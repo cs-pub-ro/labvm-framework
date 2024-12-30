@@ -13,6 +13,7 @@ variables {
   vm_debug = 0
   vm_noinstall = 0
   vm_scripts_dir = "scripts/"
+  vm_pre_copy_cmd = ""
   vm_prepare_script = "vm-prepare.sh"
   vm_install_stage1 = "install-stage1.d/"
   vm_install_stage2 = "install-stage2.d/"
@@ -88,6 +89,7 @@ build {
       "cd $VM_SCRIPTS_DIR",
       "[ -z '${var.vm_install_stage1}' ] || mkdir -p '${var.vm_install_stage1}'",
       "[ -z '${var.vm_install_stage2}' ] || mkdir -p '${var.vm_install_stage2}'",
+      var.vm_pre_copy_cmd,
       "chown ${var.ssh_username}:${var.ssh_username} $VM_SCRIPTS_DIR -R"
     ]
     execute_command = local.sudo
