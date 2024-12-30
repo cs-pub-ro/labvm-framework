@@ -3,6 +3,12 @@
 # check variable if defined & not empty
 check-var = $(if $(strip $($1)),,$(error "$1" is not defined))
 
+# Makefile include guard, shows an error if multiple inclusions were detected
+# use with $(call mk_include_guard,UNIQUE_FILE_ID)
+mk_include_guard = $(strip \
+		$(if $(strip $(__mk_guard_$(1))),$(error "$1" was already included)) \
+		$(eval __mk_guard_$(1) := 1))
+
 # blank (i.e., empty string) variable
 blank :=
 # variable containing a single new line

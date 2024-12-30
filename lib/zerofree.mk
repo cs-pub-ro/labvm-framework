@@ -1,5 +1,6 @@
 ## Utility make macro to add <vm>_compact/zerofree rule to VM targets
 # Requires qemu-nbd to be installed (check out utils/zerofree.sh)
+$(call mk_include_guard,vm_lib_zerofree)
 
 SUDO ?= sudo
 # Configurable device wait time, in seconds; increase on slow systems if NBD 

@@ -1,4 +1,5 @@
 ## Generic VM layer build macros
+$(call mk_include_guard,vm_layer_generic)
 
 ## Config variables: you can override them inside your Makefile):
 

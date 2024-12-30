@@ -1,4 +1,5 @@
 ## Include file for building a Ubuntu base VM
+$(call mk_include_guard,vm_base_ubuntu)
 
 ## Variables (override them inside your Makefile):
 UBUNTU_VERSION ?= 22

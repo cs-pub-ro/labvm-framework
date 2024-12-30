@@ -1,4 +1,5 @@
 ## Fully featured VM layer build macros
+$(call mk_include_guard,vm_layer_full_featured)
 
 ## Config variables: you can override them inside your Makefile):
 
