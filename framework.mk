@@ -1,7 +1,9 @@
 # Makefile framework for Packer VM builds
 
 # prerequisites
-include $(FRAMEWORK_DIR)/utils.mk
+include $(FRAMEWORK_DIR)/lib/utils.mk
+# protect against double inclusion
+$(call mk_include_guard,vm_framework)
 
 # load configuration file
 include $(FRAMEWORK_DIR)/config.default.mk
@@ -95,11 +97,11 @@ $(vm)_commit:
 $(-vm-extra-rules)
 
 endef
-gen_vm_rules = $(call check-var,vm_gen_$(-vm-type)_rules)$(vm_gen_$(-vm-type)_rules)
-gen_all_vm_rules = $(foreach vm,$(build-vms),$(nl)$(gen_vm_rules))
-eval_all_vm_rules = $(foreach vm,$(build-vms),$(eval $(nl)$(gen_vm_rules)))
+vm_gen_one_target_rules = $(call check-var,vm_gen_$(-vm-type)_rules)$(vm_gen_$(-vm-type)_rules)
+vm_gen_all_target_rules = $(foreach vm,$(build-vms),$(nl)$(vm_gen_one_target_rules))
+vm_eval_all_target_rules = $(foreach vm,$(build-vms),$(eval $(nl)$(vm_gen_one_target_rules)))
 
-define gen_common_rules
+define vm_gen_common_rules
 .PHONY: _ init ssh
 _: $(DEFAULT_GOAL)
 init:
@@ -114,19 +116,26 @@ $$(BUILD_DIR)/:
 
 endef
 # debugging helper rules
-define gen_debug_rules
+define vm_gen_debug_rules
 # debug helpers
 .PHONY: @debug @debug-make @debug-rules
 @debug: @debug-rules
 @debug-rules:
 	$$(info $$(build-vms))
-	$$(info $$(gen_all_vm_rules))
+	$$(info $$(vm_gen_all_vm_rules))
 	@echo
 @debug-make: @debug-rules
 	@$(MAKE) -r -p
 @print-% : ; @echo $$* = $$($$*)
 
 endef
-eval_debug_rules = $(eval $(gen_debug_rules)$(nl))
-eval_common_rules = $(eval $(gen_common_rules))$(call eval_debug_rules)
+vm_eval_debug_rules = $(eval $(vm_gen_debug_rules)$(nl))
+vm_eval_common_rules = $(eval $(vm_gen_common_rules))$(call vm_eval_debug_rules)
+
+# Macro to evaluate all rules
+vm_eval_all_rules = $(vm_eval_common_rules)$(vm_eval_all_target_rules)
+
+# backwards compatibility macro aliases (previously renamed)
+eval_common_rules ?= $(vm_eval_common_rules)
+eval_all_vm_rules ?= $(vm_eval_all_target_rules)
 

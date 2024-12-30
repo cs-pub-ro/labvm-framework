@@ -1,4 +1,5 @@
 # Makefile templates to generate VMware project files
+$(call mk_include_guard,vm_lib_gen_vmware)
 
 ## <vm>-specific (placeholder for VM's ID + goal) variables and their defaults
 -vmware-name = $(call _def_value,$(vm)-vmname,$(-vm-name))

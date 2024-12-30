@@ -1,4 +1,5 @@
 # Makefile templates to generate combo VBox and VMware VM projects
+$(call mk_include_guard,vm_lib_gen_combo)
 
 include $(FRAMEWORK_DIR)/lib/gen_vbox.mk
 include $(FRAMEWORK_DIR)/lib/gen_vmware.mk

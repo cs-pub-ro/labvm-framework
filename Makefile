@@ -5,26 +5,26 @@
 # First, define VM framework's directory & include it!
 FRAMEWORK_DIR ?= .
 include $(FRAMEWORK_DIR)/framework.mk
+include $(FRAMEWORK_DIR)/lib/inc_all.mk
 
 # set default goal
 DEFAULT_GOAL = init
 
-# Fresh Ubuntu Server base VM
-ubuntu-ver = 22
-basevm-name = ubuntu_$(ubuntu-ver)_base
-basevm-packer-src = $(FRAMEWORK_DIR)/basevm
-basevm-src-image = $(BASE_VM_INSTALL_ISO)
+# Ubuntu Server base VM
+$(call vm_new_base_ubuntu,base)
 # VM destination file (automatically generated var.)
-#basevm-dest-image = $(BUILD_DIR)/$(basevm-name)/$(basevm-name).qcow2
+#base-dest-image = $(BUILD_DIR)/$(base-name)/$(base-name).qcow2
 
-# Cloud-init image
-cloudvm-name = ubuntu_$(ubuntu-ver)_cloud
-cloudvm-packer-src = $(FRAMEWORK_DIR)/cloudvm
-cloudvm-src-from = basevm
+# Cloud image
+$(call vm_new_layer_cloud,cloud)
+cloud-name = ubuntu_$(base-ver)_cloud
+cloud-src-from = base
+# always update scripts from framework (prevent re-building base on changes)
+cloud-copy-scripts = $(abspath $(FRAMEWORK_DIR)/scripts)/
+cloud-copy-scripts += $(VM_CLOUD_SCRIPTS_DIR)
 
 # list with all VMs to generate rules for
-build-vms += basevm cloudvm
+build-vms += base cloud
 
-$(call eval_common_rules)
-$(call eval_all_vm_rules)
+$(call vm_eval_all_rules)
 

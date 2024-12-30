@@ -1,4 +1,5 @@
 # Makefile templates to generate VirtualBox VM project files
+$(call mk_include_guard,vm_lib_gen_vbox)
 
 ## <vm>-specific (placeholder for VM's ID + goal) variables and their defaults
 -vbox-name = $(call _def_value,$(vm)-vmname,$(-vm-name))
