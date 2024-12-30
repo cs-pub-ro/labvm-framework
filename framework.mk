@@ -1,7 +1,7 @@
 # Makefile framework for Packer VM builds
 
 # prerequisites
-include $(FRAMEWORK_DIR)/utils.mk
+include $(FRAMEWORK_DIR)/lib/utils.mk
 
 # load configuration file
 include $(FRAMEWORK_DIR)/config.default.mk
@@ -129,4 +129,5 @@ define gen_debug_rules
 endef
 eval_debug_rules = $(eval $(gen_debug_rules)$(nl))
 eval_common_rules = $(eval $(gen_common_rules))$(call eval_debug_rules)
+
 

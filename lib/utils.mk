@@ -1,4 +1,4 @@
-# Makefile utility macros
+## Makefile utility macros
 
 # check variable if defined & not empty
 check-var = $(if $(strip $($1)),,$(error "$1" is not defined))
