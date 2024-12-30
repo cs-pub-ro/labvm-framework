@@ -9,14 +9,10 @@ FRAMEWORK_DIR ?= ..
 #FRAMEWORK_DIR ?= ./framework
 # you can also modify USER_CONFIG_DIR (where config.local.mk is loaded from)
 USER_CONFIG_DIR = ..
-# Dependencies (yep, all, of them ;) almost) 
+
+# Include framework + all libraries / layers
 include $(FRAMEWORK_DIR)/framework.mk
-include $(FRAMEWORK_DIR)/base/ubuntu/build.mk
-include $(FRAMEWORK_DIR)/layers/generic/build.mk
-include $(FRAMEWORK_DIR)/layers/cloud/build.mk
-include $(FRAMEWORK_DIR)/layers/full-featured/build.mk
-include $(FRAMEWORK_DIR)/lib/gen_vm_combo.mk
-include $(FRAMEWORK_DIR)/lib/zerofree.mk
+include $(FRAMEWORK_DIR)/lib/inc_all.mk
 
 # set default goals
 DEFAULT_GOAL = main

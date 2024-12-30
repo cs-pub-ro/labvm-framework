@@ -5,9 +5,7 @@
 # First, define VM framework's directory & include it!
 FRAMEWORK_DIR ?= .
 include $(FRAMEWORK_DIR)/framework.mk
-include $(FRAMEWORK_DIR)/base/ubuntu/build.mk
-include $(FRAMEWORK_DIR)/layers/generic/build.mk
-include $(FRAMEWORK_DIR)/layers/cloud/build.mk
+include $(FRAMEWORK_DIR)/lib/inc_all.mk
 
 # set default goal
 DEFAULT_GOAL = init
