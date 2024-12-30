@@ -85,6 +85,9 @@ build {
   provisioner "shell" {
     inline = [
       "mkdir -p $VM_SCRIPTS_DIR",
+      "cd $VM_SCRIPTS_DIR",
+      "[ -z '${var.vm_install_stage1}' ] || mkdir -p '${var.vm_install_stage1}'",
+      "[ -z '${var.vm_install_stage2}' ] || mkdir -p '${var.vm_install_stage2}'",
       "chown ${var.ssh_username}:${var.ssh_username} $VM_SCRIPTS_DIR -R"
     ]
     execute_command = local.sudo
