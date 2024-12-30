@@ -28,6 +28,5 @@ cloud-copy-scripts += $(VM_CLOUD_SCRIPTS_DIR)
 # list with all VMs to generate rules for
 build-vms += base cloud
 
-$(call eval_common_rules)
-$(call eval_all_vm_rules)
+$(call vm_eval_all_rules)
 

@@ -121,8 +121,7 @@ Now, there is one more thing... at the bottom of the `Makefile`, we have this:
 
 ```Makefile
 build-vms = base main full exported full_cloud
-$(call eval_common_rules)
-$(call eval_all_vm_rules)
+$(call vm_eval_all_rules)
 ```
 
 Yep, we MUST list our TARGETs and invoke the framework's rule generator macro.
