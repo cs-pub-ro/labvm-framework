@@ -122,7 +122,7 @@ define vm_gen_debug_rules
 @debug: @debug-rules
 @debug-rules:
 	$$(info $$(build-vms))
-	$$(info $$(vm_gen_all_vm_rules))
+	$$(info $$(vm_gen_all_target_rules))
 	@echo
 @debug-make: @debug-rules
 	@$(MAKE) -r -p
