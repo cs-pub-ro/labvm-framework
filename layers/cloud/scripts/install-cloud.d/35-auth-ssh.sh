@@ -23,7 +23,7 @@ else
 	echo "PermitRootLogin no" >> /etc/ssh/sshd_config.d/30-cloud-auth.conf
 fi
 
-if [[ "$VM_SSH_PASSWORD_AUTH" == "1" ]]; then
+if [[ "$VM_SSH_LEGACY_ALGS" == "1" ]]; then
 	( echo "HostkeyAlgorithms +ssh-rsa"; 
 	  echo "PubkeyAcceptedAlgorithms +ssh-rsa" ) \
 		> "/etc/ssh/sshd_config.d/30-legacy-algs.conf"
