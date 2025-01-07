@@ -23,3 +23,8 @@ function systemd_install_service() {
 	systemctl enable "$SERVICE_NAME"
 }
 
+# Returns whether a systemd service is installed & enabled.
+function systemd_is_enabled() {
+	systemctl is-enabled "$1" &>/dev/null
+}
+
