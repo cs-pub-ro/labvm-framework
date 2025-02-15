@@ -18,9 +18,9 @@ include $(FRAMEWORK_DIR)/lib/inc_all.mk
 DEFAULT_GOAL = main
 INIT_GOAL = main
 
-# Ubuntu Server 22.04 base VM
-$(call vm_new_base_ubuntu,base)
-base-ver = 22
+# user-definable base (used for testing)
+BASE ?= ubuntu
+$(call vm_new_base_$(BASE),base)
 
 # example versioning & unified prefix scheme
 vm-ver = 2024.01

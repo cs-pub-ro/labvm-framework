@@ -10,6 +10,20 @@
 KERNEL_CMDLINE_APPEND=${KERNEL_CMDLINE_APPEND:-}
 KERNEL_CMDLINE_APPEND+=" net.ifnames=0 biosdevname=0"
 
+# use a standard interfaces with eth0
+if [[ -f /etc/network/interfaces ]]; then
+	cat << EOF > "/etc/network/interfaces"
+# interfaces(5) file used by ifup(8) and ifdown(8)
+auto lo
+
+auto eth0
+iface eth0 inet dhcp
+
+# Include files from /etc/network/interfaces.d:
+source /etc/network/interfaces.d/*
+EOF
+fi
+
 # modify Ubuntu's netplan configuration (if used) for eth0
 NETPLAN_CONFIG="/etc/netplan/50-cloud-init.yaml"
 if [[ -f "$NETPLAN_CONFIG" ]]; then
