@@ -32,7 +32,7 @@ _def_value = $(if $($(1)),$($(1)),$(2))
 _packer_var = $(if $(2),-var '$(1)=$(2)')
 
 # macro for generating a JSON list of strings
-_packer_json_list_tmp = $(foreach val,$(1),"$(val)",),
+_packer_json_list_tmp = $(if $(1),$(foreach val,$(1),"$(val)",)$(comma))
 _packer_json_list = [$(subst $(comma)$(comma),,$(_packer_json_list_tmp))]
 
 # macro for checking whether a base file $(1) exists in a path $(2)

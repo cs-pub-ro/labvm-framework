@@ -10,9 +10,6 @@ BASE_UBUNTU_PKR_SRC ?= $(FRAMEWORK_DIR)/base/ubuntu
 # provision base framework scripts
 BASE_UBUNTU_SCRIPTS_DIR ?= $(abspath $(FRAMEWORK_DIR)/scripts)/
 
--vm-copy-scripts = $(call _def_value,$(vm)-copy-scripts,)
--vm-copy-scripts-list = $(call _packer_json_list,$(-vm-copy-scripts))
-
 define _vm_new_base_ubuntu_tpl=
 $(1)-ver ?= $$(UBUNTU_VERSION)
 $(1)-name ?= ubuntu_$$($(1)-ver)_base

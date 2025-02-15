@@ -42,6 +42,9 @@ MAKEFLAGS += --no-builtin-rules
 -vm-extra-rules = $($(vm)-extra-rules)
 
 # internal macros:
+-vm-copy-scripts = $(call _def_value,$(vm)-copy-scripts,)
+-vm-copy-scripts-list = $(call _packer_json_list,$(-vm-copy-scripts))
+
 -vm-dest-image = $(-vm-dest-dir)/$(-vm-dest-file)
 -vm-dest-timestamp = $(-vm-dest-dir)/.exists
 -vm-image-deps = $(strip $(if $(-vm-source-from),$(let vm,$(-vm-source-from),$(-vm-dest-timestamp)),\

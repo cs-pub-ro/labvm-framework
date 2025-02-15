@@ -13,9 +13,6 @@ VM_GENERIC_SRC_FROM ?= base
 VM_AUTHORIZED_KEYS ?= $(abspath $(_find_file_in_path *authorized_keys*,\
 					  ./dist $(USER_CONFIG_DIR)/dist))
 
--vm-copy-scripts = $(call _def_value,$(vm)-copy-scripts,)
--vm-copy-scripts-list = $(call _packer_json_list,$(-vm-copy-scripts))
-
 # macros to check whether script/dir exists and supply provisioning defaults
 -vm-generic-prepare = $(strip $(call _def_value,$(vm)-script-prepare,\
 		$(notdir $(call _find_file_in_path,vm-prepare.sh,$(-vm-copy-scripts)))))
