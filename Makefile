@@ -10,14 +10,13 @@ include $(FRAMEWORK_DIR)/lib/inc_all.mk
 # set default goal
 DEFAULT_GOAL = init
 
-# Ubuntu Server base VM
-$(call vm_new_base_ubuntu,base)
-# VM destination file (automatically generated var.)
-#base-dest-image = $(BUILD_DIR)/$(base-name)/$(base-name).qcow2
+# Create new base VM
+BASE ?= ubuntu
+$(call vm_new_base_$(BASE),base)
 
 # Cloud image
 $(call vm_new_layer_cloud,cloud)
-cloud-name = ubuntu_$(base-ver)_cloud
+cloud-name = $(base-prefix)_cloud
 cloud-src-from = base
 # always update scripts from framework (prevent re-building base on changes)
 cloud-copy-scripts = $(abspath $(FRAMEWORK_DIR)/scripts)/

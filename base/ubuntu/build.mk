@@ -12,7 +12,8 @@ BASE_UBUNTU_SCRIPTS_DIR ?= $(abspath $(FRAMEWORK_DIR)/scripts)/
 
 define _vm_new_base_ubuntu_tpl=
 $(1)-ver ?= $$(UBUNTU_VERSION)
-$(1)-name ?= ubuntu_$$($(1)-ver)_base
+$(1)-prefix ?= ubuntu_$$($(1)-ver)
+$(1)-name ?= $$($(1)-prefix)_base
 $(1)-packer-src = $$(BASE_UBUNTU_PKR_SRC)
 $(1)-packer-args ?=
 $(1)-packer-args += -var 'vm_scripts_dir=' \

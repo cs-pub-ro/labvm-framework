@@ -15,7 +15,11 @@ INIT_GOAL ?= $(build-vms)
 BUILD_DIR ?= $(HOME)/.cache/packer
 
 # Base OS installation .iso image
-BASE_VM_INSTALL_ISO ?= $(HOME)/Downloads/ubuntu-22.04.3-server-amd64.iso
+UBUNTU_22_ISO ?= $(HOME)/Downloads/ubuntu-22.04.3-server-amd64.iso
+DEBIAN_12_ISO ?= $(HOME)/Downloads/debian-12.9.0-amd64-netinst.iso
+
+# change default base (optional: only if you use this variable)
+#BASE ?= debian
 
 # VM defaults (for base images)
 VM_TIMEZONE ?= Europe/Bucharest
