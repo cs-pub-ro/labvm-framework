@@ -19,7 +19,7 @@ DEFAULT_GOAL = main
 INIT_GOAL = main
 
 # user-definable base (used for testing)
-BASE ?= ubuntu
+BASE ?= debian
 $(call vm_new_base_$(BASE),base)
 
 # example versioning & unified prefix scheme
@@ -37,6 +37,10 @@ main-copy-scripts += $(abspath ./main/scripts)/
 # has a special format (comma-separated quoted strings):
 main-extra-envs += "VM_EXAMPLE=TEST", "VM_TEST=New Test",
 main-extra-envs += "VM_TEST=New Test",
+
+$(call vm_new_layer_desktop_xfce,xfce)
+xfce-name = $(vm-prefix)_xfce
+xfce-src-from = base
 
 # Example VM starting from the full-featured layer
 # [re]build with `make full_clean full`
@@ -69,7 +73,7 @@ full_cloud-extra-rules += $(vm_zerofree_rule)
 
 # List of targets to generate rules for (note: must manually order them
 # topologically, i.e. build dependencies before their targets)
-build-vms = base main full exported full_cloud
+build-vms = base main full exported full_cloud xfce
 
 $(call vm_eval_all_rules)
 

@@ -8,8 +8,7 @@ sh_log_info "VM_TEST=$VM_TEST"
 
 # install some base dependencies
 pkg_install --no-install-recommends \
-	apt-transport-https ca-certificates curl wget software-properties-common \
-	git unzip zsh vim
+	apt-transport-https ca-certificates curl wget git unzip zsh vim
 
 if [[ -n "$VM_FULL_UPGRADE" ]]; then
 	pkg_upgrade_all
