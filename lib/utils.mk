@@ -39,3 +39,6 @@ _packer_json_list = [$(subst $(comma)$(comma),,$(_packer_json_list_tmp))]
 # returns the full path to the file if found, empty otherwise
 _find_file_in_path = $(firstword $(wildcard $(2:%=%/$(1))))
 
+# macro for finding a file matching the pattern (latest in sorting order)
+_find_last_file = $(lastword $(sort $(wildcard $(1))))
+

@@ -2,13 +2,13 @@
 $(call mk_include_guard,vm_base_ubuntu)
 
 ## Variables (override them inside your Makefile):
-UBUNTU_VERSION ?= 22
-UBUNTU_22_ISO ?= $(call _def_value,BASE_VM_INSTALL_ISO,\
-				 $(HOME)/Downloads/ubuntu-22.04.5-live-server-amd64.iso)
+UBUNTU_VERSION ?= 24
 # ubuntu base packer source dir
 BASE_UBUNTU_PKR_SRC ?= $(FRAMEWORK_DIR)/base/ubuntu
 # provision base framework scripts
 BASE_UBUNTU_SCRIPTS_DIR ?= $(abspath $(FRAMEWORK_DIR)/scripts)/
+# expand ubuntu ISO
+_UBUNTU_ISO_FULL ?= $(call _find_last_file,$(BASE_ISO_DIR)/$(UBUNTU_ISO_NAME))
 
 define _vm_new_base_ubuntu_tpl=
 $(1)-ver ?= $$(UBUNTU_VERSION)
@@ -24,7 +24,7 @@ $(1)-packer-args += -var 'vm_scripts_dir=' \
 	$$(call _packer_var,vm_crypted_password,$$$$(VM_CRYPTED_PASSWORD)) \
 	$$(call _packer_var,vm_ubuntu_ver,$$($(1)-ver))
 $(1)-copy-scripts ?= $$(BASE_UBUNTU_SCRIPTS_DIR)
-$(1)-src-image ?= $$(UBUNTU_$$($(1)-ver)_ISO)
+$(1)-src-image ?= $$(_UBUNTU_ISO_FULL)
 
 endef
 # use with $(call vm_new_base_ubuntu,base)
