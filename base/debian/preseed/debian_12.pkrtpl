@@ -1,3 +1,5 @@
+# Debian 12 preseed for base VM install
+
 # Locale Setup
 # d-i debian-installer/language string TODO
 # d-i debian-installer/country string TODO
@@ -56,7 +58,6 @@ d-i partman-partitioning/confirm_write_new_label boolean true
 d-i partman/choose_partition select finish
 d-i partman/confirm boolean true
 d-i partman/confirm_nooverwrite boolean true
-#d-i partman-auto/choose_recipe select atomic
 
 d-i partman-basicfilesystems/no_swap boolean false
 d-i partman-auto/expert_recipe string noswap :: 1000 50 -1 ext4 \

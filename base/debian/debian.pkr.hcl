@@ -75,7 +75,7 @@ source "qemu" "base-debian" {
   host_port_max     = var.qemu_ssh_forward
 
   http_content = {
-    "/base.preseed" = templatefile("${path.root}/preseed/base.pkrtpl", {
+    "/base.preseed" = templatefile("${path.root}/preseed/debian_${var.vm_debian_ver}.pkrtpl", {
       var=var
     })
   }

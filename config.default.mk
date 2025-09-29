@@ -19,7 +19,7 @@ VM_ARCH = amd64
 # change default base (optional: only if you use this variable)
 #BASE ?= debian
 # base OS versions
-DEBIAN_VERSION ?= 12
+DEBIAN_VERSION ?= 13
 UBUNTU_VERSION ?= 24
 # OS installer .iso paths
 BASE_ISO_DIR ?= $(HOME)/Downloads/iso
