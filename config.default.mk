@@ -23,11 +23,8 @@ DEBIAN_VERSION ?= 13
 UBUNTU_VERSION ?= 24
 # OS installer .iso paths
 BASE_ISO_DIR ?= $(HOME)/Downloads/iso
-UBUNTU_ISO_NAME ?= ubuntu-$(UBUNTU_VERSION).*-live-server-$(VM_ARCH).iso
-DEBIAN_ISO_NAME ?= debian-$(DEBIAN_VERSION).*-$(VM_ARCH)-netinst.iso
-
-_UBUNTU_ISO_FULL ?= $(call _find_last_file,$(BASE_ISO_DIR)/$(UBUNTU_ISO_NAME))
-$(info UBUNTU ISO: $(_UBUNTU_ISO_FULL))
+UBUNTU_ISO_NAME ?= ubuntu-$(ver).*-live-server-$(VM_ARCH).iso
+DEBIAN_ISO_NAME ?= debian-$(ver).*-$(VM_ARCH)-netinst.iso
 
 # VM defaults (for base images)
 VM_TIMEZONE ?= Europe/Bucharest
