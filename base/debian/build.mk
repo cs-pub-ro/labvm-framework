@@ -23,7 +23,7 @@ $(1)-packer-args += -var 'vm_scripts_dir=' \
 	$$(call _packer_var,vm_timezone,$$(VM_TIMEZONE)) \
 	$$(call _packer_var,vm_debian_ver,$$($(1)-ver))
 $(1)-copy-scripts ?= $$(BASE_DEBIAN_SCRIPTS_DIR)
-$(1)-src-image ?= $(foreach ver,$$($(1)-ver),$$(_DEBIAN_ISO_FULL))
+$(1)-src-image ?= $$(let ver,$$($(1)-ver),$$(_DEBIAN_ISO_FULL))
 
 endef
 # use with $(call vm_new_base_debian,base)

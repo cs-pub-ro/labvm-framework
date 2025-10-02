@@ -24,7 +24,7 @@ $(1)-packer-args += -var 'vm_scripts_dir=' \
 	$$(call _packer_var,vm_crypted_password,$$$$(VM_CRYPTED_PASSWORD)) \
 	$$(call _packer_var,vm_ubuntu_ver,$$($(1)-ver))
 $(1)-copy-scripts ?= $$(BASE_UBUNTU_SCRIPTS_DIR)
-$(1)-src-image ?= $(foreach ver,$$($(1)-ver),$$(_UBUNTU_ISO_FULL))
+$(1)-src-image ?= $$(let ver,$$($(1)-ver),$$(_UBUNTU_ISO_FULL))
 
 endef
 # use with $(call vm_new_base_ubuntu,base)
