@@ -7,13 +7,15 @@ SUDO ?= sudo
 # device doesn't get mounted in time
 ZEROFREE_DEV_WAIT ?= 5
 export ZEROFREE_DEV_WAIT
+ZEROFREE_PART_NUM ?= 2
+export ZEROFREE_PART_NUM
 
 # Usage: YOUR_VM-extra-rules += $(_vm_compact_rule)
 define vm_zerofree_rule
 .PHONY: $(vm)_compact $(vm)_zerofree
 $(vm)_zerofree: $(vm)_compact
 $(vm)_compact:
-	$(SUDO) "$(FRAMEWORK_DIR)/utils/zerofree.sh" "$$($(vm)-dest-image)"
+	$(SUDO) --preserve-env="ZEROFREE_PART_NUM,ZEROFREE_DEV_WAIT" "$(FRAMEWORK_DIR)/utils/zerofree.sh" "$$($(vm)-dest-image)"
 
 endef
 

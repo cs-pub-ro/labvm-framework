@@ -5,6 +5,7 @@
 QEMU_NBD_DEV=nbd0
 MOUNTPOINT=/tmp/vm-framework-zerofree
 ZEROFREE_DEV_WAIT=${ZEROFREE_DEV_WAIT:-'5'}
+ZEROFREE_PART_NUM=${ZEROFREE_PART_NUM:-2}
 
 if ! lsmod | grep -wq "nbd"; then
 	modprobe nbd max_part=8 || exit 1
@@ -23,13 +24,13 @@ exit_fail() {
 
 qemu-nbd -c "/dev/$QEMU_NBD_DEV" "$1"  || exit 2
 sleep "$ZEROFREE_DEV_WAIT"
-mount "/dev/${QEMU_NBD_DEV}p2" "$MOUNTPOINT" || exit_fail
+mount "/dev/${QEMU_NBD_DEV}p${ZEROFREE_PART_NUM}" "$MOUNTPOINT" || exit_fail
 e4defrag "$MOUNTPOINT" > /dev/null
 if command -v zerofree &> /dev/null; then
 	# use zerofree, it's much more thorough than creating a file
 	# occupying 100% of free space
 	mountpoint -q "$MOUNTPOINT" && umount "$MOUNTPOINT" || true
-	zerofree "/dev/${QEMU_NBD_DEV}p2" || exit_fail
+	zerofree "/dev/${QEMU_NBD_DEV}p${ZEROFREE_PART_NUM}" || exit_fail
 else
 	mountpoint -q "$MOUNTPOINT" || exit_fail
 	dd if=/dev/zero of="$MOUNTPOINT/.zerofile" bs=1M || true
