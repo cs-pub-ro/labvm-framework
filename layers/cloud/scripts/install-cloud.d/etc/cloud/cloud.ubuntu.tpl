@@ -1,4 +1,3 @@
-user: {{VM_USER}}
 disable_root: True
 preserve_hostname: True
 # datasource_list: ["NoCloud", "ConfigDrive", "OVF", "MAAS", "Ec2", "CloudStack"]

@@ -19,7 +19,12 @@ rm -f /etc/netplan/50-cloud-init.yaml
 rsync -ai --chown="root:root" --exclude "*.tpl" \
 	"$SRC/etc/" "/etc/"
 
-# interpolate user inside cloud.cfg
-sh_interpolate_vars "$(cat "$SRC/etc/cloud/cloud.cfg.tpl")" \
-	VM_USER="$VM_USER" > "/etc/cloud/cloud.cfg"
+echo "user: $VM_USER" > "/etc/cloud/cloud.cfg.d/10-user.cfg"
+
+# copy cloud config for VM distro
+CLOUD_TPL=cloud.debian.tpl
+if lsb_release -d | grep -i Ubuntu &>/dev/null; then
+	CLOUD_TPL=cloud.ubuntu.tpl
+fi
+cp -f "$SRC/etc/cloud/$CLOUD_TPL" "/etc/cloud/cloud.cfg"
 

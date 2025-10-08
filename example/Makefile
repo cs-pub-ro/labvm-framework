@@ -17,6 +17,8 @@ include $(FRAMEWORK_DIR)/lib/inc_all.mk
 # set default goals
 DEFAULT_GOAL = main
 INIT_GOAL = main
+# Debian uses 1 partition only
+ZEROFREE_PART_NUM = 1
 
 # user-definable base (used for testing)
 BASE ?= debian
