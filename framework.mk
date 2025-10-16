@@ -5,8 +5,13 @@ include $(FRAMEWORK_DIR)/lib/utils.mk
 # protect against double inclusion
 $(call mk_include_guard,vm_framework)
 
+FRAMEWORK_DIR:=$(abspath $(FRAMEWORK_DIR))
+
 # load configuration file
 include $(FRAMEWORK_DIR)/config.default.mk
+
+# load arch support definitions
+include $(FRAMEWORK_DIR)/lib/arch/_support.mk
 
 # speed tweaks
 MAKEFLAGS += --no-builtin-rules

@@ -30,6 +30,7 @@ _def_value = $(if $($(1)),$($(1)),$(2))
 
 # macro which sets a packer variable, if set
 _packer_var = $(if $(2),-var '$(1)=$(2)')
+_packer_varfile = $(if $(1),-var-file='$(1)')
 
 # macro for generating a JSON list of strings
 _packer_json_list_tmp = $(if $(1),$(foreach val,$(1),"$(val)",)$(comma))

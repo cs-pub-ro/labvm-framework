@@ -15,7 +15,8 @@ INIT_GOAL ?= $(build-vms)
 BUILD_DIR ?= $(HOME)/.cache/packer
 
 # VM architecture
-VM_ARCH = amd64
+ARCH ?= x86_64
+
 # change default base (optional: only if you use this variable)
 #BASE ?= debian
 # base OS versions
@@ -23,8 +24,8 @@ DEBIAN_VERSION ?= 13
 UBUNTU_VERSION ?= 24
 # OS installer .iso paths
 BASE_ISO_DIR ?= $(HOME)/Downloads/iso
-UBUNTU_ISO_NAME ?= ubuntu-$(ver).*-live-server-$(VM_ARCH).iso
-DEBIAN_ISO_NAME ?= debian-$(ver).*-$(VM_ARCH)-netinst.iso
+UBUNTU_ISO_NAME ?= ubuntu-$(ver).*-live-server-$(ARCH_ALT).iso
+DEBIAN_ISO_NAME ?= debian-$(ver).*-$(ARCH_ALT)-netinst.iso
 
 # VM defaults (for base images)
 VM_TIMEZONE ?= Europe/Bucharest
@@ -47,7 +48,7 @@ PAUSE ?= $(DEBUG)
 # Packer invocation arguments
 PACKER ?= packer
 PACKER_ARGS_EXTRA ?=
-PACKER_ARGS ?= -on-error=abort $(if $(PACKER_DEBUG),-debug) \
+PACKER_ARGS ?= -on-error=abort $(ARCH_PACKER_ARGS) $(if $(PACKER_DEBUG),-debug) \
 			   $(call _packer_var,vm_pause,$(PAUSE)) \
 			   $(call _packer_var,vm_debug,$(DEBUG)) \
 			   $(call _packer_var,ssh_username,$(VM_USER)) \

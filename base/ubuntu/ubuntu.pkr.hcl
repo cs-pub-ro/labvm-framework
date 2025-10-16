@@ -8,6 +8,7 @@ packer {
 }
 
 variables {
+  arch = "x86_64"
   vm_name = "basevm"
   vm_locale = "en_US"
   vm_timezone = "Europe/Bucharest"
@@ -20,6 +21,10 @@ variables {
   vm_install_base = "base-debian.d/"
   vm_ubuntu_ver = "22"
   vm_ubuntu_kernel_pkg = "linux-image-virtual"
+  qemu_binary = "qemu-system-x86_64"
+  qemu_machine_type = "pc"
+  qemu_accelerator = "kvm"
+  qemu_bios = ""
   qemu_unmap = false
   qemu_ssh_forward = 20022
   disk_size = 8192
@@ -30,6 +35,10 @@ variables {
   boot_wait = "5s"
   ssh_username = "TODO"
   ssh_password = "TODO"
+}
+variable "qemu_extra_args" {
+  type    = list(list(string))
+  default = []
 }
 variable "vm_scripts_list" {
   type    = list(string)
@@ -51,6 +60,12 @@ source "qemu" "base-ubuntu" {
   vm_name       = var.vm_name
   headless      = false
 
+  // Arch-specific qemu config
+  qemu_binary  = var.qemu_binary
+  machine_type = var.qemu_machine_type
+  firmware     = var.qemu_bios
+  accelerator  = var.qemu_accelerator
+  qemuargs     = concat([], var.qemu_extra_args)
   // Virtual Hardware Specs
   memory         = 2048
   cpus           = 2
