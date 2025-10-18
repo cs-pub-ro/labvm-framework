@@ -22,9 +22,9 @@ ARCH_EFI_BIOS ?= $(firstword $(wildcard $(ARCH_EFI_ALTS:%=$(ARCH_EFI_DIR)/%)))
 
 # packer vars to inject
 ARCH_PACKER_ARGS ?= \
-		$(call _packer_varfile,$(FRAMEWORK_DIR)/lib/arch/$(ARCH).pkrvars.hcl) \
+		$(call _packer_var,arch,$(ARCH)) \
 		$(if $(ARCH_USE_EFI), \
-			$(call _packer_var,qemu_bios,$(ARCH_EFI_BIOS)) \
+			$(call _packer_var,qemu_firmware,$(ARCH_EFI_BIOS)) \
 		)
 
 ifneq ($(DEBUG),)
