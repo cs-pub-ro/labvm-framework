@@ -7,6 +7,11 @@ variables {
   source_checksum = "none"
 }
 
+locals {
+  debian_preseed_suffix = "${var.vm_debian_ver}"
+  deb_part_template = (local.qemu_efi_firmware != "" ? "gpt_efi_root.conf" : "mbr_boot_root.conf")
+}
+
 source "qemu" "base" {
   // VM Info:
   vm_name       = var.vm_name
@@ -43,9 +48,11 @@ source "qemu" "base" {
   host_port_max     = var.qemu_ssh_forward
 
   http_content = {
-    "/base.preseed" = templatefile("${path.root}/preseed/debian_${var.vm_debian_ver}.pkrtpl", {
-      var=var
-    })
+    "/base.preseed" = templatefile(
+        "${path.root}/preseed/debian_${local.debian_preseed_suffix}.pkrtpl", {
+        var=var, local=local,
+        partman_recipe = file("${path.root}/preseed/snippets/${local.deb_part_template}"),
+      })
   }
 
   boot_wait = (var.use_backing_file ? null : var.boot_wait)
