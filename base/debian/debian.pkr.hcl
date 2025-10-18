@@ -9,6 +9,9 @@ variables {
 
 locals {
   debian_preseed_suffix = "${var.vm_debian_ver}"
+  debian_boot_keys = lookup(lookup(local.arch_vars, var.arch, {}), "debian_boot_keys", "")
+  debian_install = lookup(lookup(local.arch_vars, var.arch, {}), "debian_install", "")
+  qemu_pre_keys = ""
   deb_part_template = (local.qemu_efi_firmware != "" ? "gpt_efi_root.conf" : "mbr_boot_root.conf")
 }
 
@@ -18,11 +21,12 @@ source "qemu" "base" {
   headless      = false
 
   // Arch-specific qemu config
-  qemu_binary  = var.qemu_binary
-  machine_type = var.qemu_machine_type
-  firmware     = var.qemu_bios
-  accelerator  = var.qemu_accelerator
-  qemuargs     = concat([], var.qemu_extra_args)
+  qemu_binary  = lookup(lookup(local.arch_vars, var.arch, {}), "qemu_binary", "")
+  machine_type = lookup(lookup(local.arch_vars, var.arch, {}), "machine_type", "")
+  firmware     = local.qemu_efi_firmware
+  accelerator  = lookup(lookup(local.arch_vars, var.arch, {}), "accelerator", "")
+  qemuargs     = concat(var.qemu_args,
+    lookup(lookup(local.arch_vars, var.arch, {}), "extra_args", []))
   // Virtual Hardware Specs
   memory         = 2048
   cpus           = 2
@@ -56,15 +60,15 @@ source "qemu" "base" {
   }
 
   boot_wait = (var.use_backing_file ? null : var.boot_wait)
-  boot_command = (var.use_backing_file ? null : [
-    "<wait><wait><wait><esc><wait><wait><wait>",
-    "/install.amd/vmlinuz ",
-    "initrd=/install.amd/initrd.gz ",
+  boot_command = (var.use_backing_file || false ? null : [
+    "${local.debian_boot_keys}",
+    "/${local.debian_install}/vmlinuz ",
+    "initrd=/${local.debian_install}/initrd.gz ",
     "auto=true ",
     "url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/base.preseed ",
     "hostname=${var.vm_hostname} domain= ",
     "interface=auto ",
-    "vga=788 noprompt quiet --<enter>",
+    lookup(lookup(local.arch_vars, var.arch, {}), "kernel_cmdline", ""),
   ])
   shutdown_command  = "sudo /sbin/shutdown -h now"
 }

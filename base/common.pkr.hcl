@@ -16,10 +16,6 @@ variables {
   vm_pause = 0
   vm_debug = 0
   vm_scripts_dir = "scripts/"
-  qemu_binary = "qemu-system-x86_64"
-  qemu_machine_type = "pc"
-  qemu_accelerator = "kvm"
-  qemu_bios = ""
   qemu_unmap = false
   qemu_ssh_forward = 20022
   disk_size = 8192
@@ -28,10 +24,6 @@ variables {
   boot_wait = "5s"
   ssh_username = "TODO"
   ssh_password = "TODO"
-}
-variable "qemu_extra_args" {
-  type    = list(list(string))
-  default = []
 }
 variable "vm_scripts_list" {
   type    = list(string)
