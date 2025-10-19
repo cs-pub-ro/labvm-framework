@@ -9,6 +9,10 @@ else
 ARCH_USE_EFI?=
 endif
 
+# Architecture-specific suffix to add to the image names
+# (evaluates to empty for x86_64)
+ARCH_SUFFIX = $(if $(filter-out $(ARCH),x86_64),_$(ARCH))
+
 # alternate architecture names
 ARCH_ALT ?= $(firstword $(call _def_value,ARCH_ALTS_$(ARCH),$(ARCH)))
 ARCH_ALTS ?= $(ARCH_ALTS_$(ARCH)) $(ARCH)

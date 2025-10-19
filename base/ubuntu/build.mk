@@ -12,7 +12,7 @@ _UBUNTU_ISO_FULL ?= $(call _find_last_file,$(BASE_ISO_DIR)/$(UBUNTU_ISO_NAME))
 
 define _vm_new_base_ubuntu_tpl=
 $(1)-ver ?= $$(UBUNTU_VERSION)
-$(1)-prefix ?= ubuntu_$$($(1)-ver)
+$(1)-prefix ?= ubuntu_$$($(1)-ver)$$(ARCH_SUFFIX)
 $(1)-name ?= $$($(1)-prefix)_base
 $(1)-packer-src = $$(BASE_UBUNTU_PKR_SRC)
 $(1)-packer-args ?=

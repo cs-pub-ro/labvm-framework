@@ -12,7 +12,7 @@ _DEBIAN_ISO_FULL ?= $(call _find_last_file,$(BASE_ISO_DIR)/$(DEBIAN_ISO_NAME))
 
 define _vm_new_base_debian_tpl=
 $(1)-ver ?= $$(DEBIAN_VERSION)
-$(1)-prefix ?= debian_$$($(1)-ver)
+$(1)-prefix ?= debian_$$($(1)-ver)$$(ARCH_SUFFIX)
 $(1)-name ?= $$($(1)-prefix)_base
 $(1)-packer-src = $$(BASE_DEBIAN_PKR_SRC)
 $(1)-packer-args ?=
