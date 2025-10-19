@@ -6,17 +6,15 @@
 
 # C tools & manpages
 pkg_install --no-install-recommends \
-	build-essential make gcc-multilib libc6-dev-i386 libc-devtools \
-	cscope exuberant-ctags \
+	build-essential make libc-devtools cscope exuberant-ctags \
 	manpages-posix manpages-dev manpages-posix-dev make-doc \
 	glibc-doc-reference
-
 
 # Add some i386 libraries
 if uname -m | grep x86_64 >/dev/null; then
 	dpkg --add-architecture i386
 	pkg_init_update
-	pkg_install libc6-dbg:i386 libgcc-s1:i386
+	pkg_install libc6-dbg:i386 libgcc-s1:i386 gcc-multilib libc6-dev-i386
 fi
 
 # Tracing & debugging

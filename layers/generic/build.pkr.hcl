@@ -53,6 +53,12 @@ source "qemu" "vm" {
   vm_name       = var.vm_name
   headless      = false
 
+  // Arch-specific qemu config
+  qemu_binary  = local.qemu_arch_binary
+  machine_type = local.qemu_arch_machine_type
+  firmware     = local.qemu_arch_firmware
+  accelerator  = local.qemu_arch_accelerator
+  qemuargs     = local.qemu_arch_qemuargs
   // Virtual Hardware Specs
   memory         = 2048
   cpus           = 2
