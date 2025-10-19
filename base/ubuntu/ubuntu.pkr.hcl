@@ -1,4 +1,6 @@
 variables {
+  // Note: multi-arch not yet supported for Ubuntu
+   = "x86_64"
   vm_hostname = "ubuntu"
   vm_prepare_script = "base-prepare.sh"
   vm_install_base = "base-debian.d/"

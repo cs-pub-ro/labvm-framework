@@ -1,45 +1,39 @@
-// multi-arch specializations for Debian installer 
+// Common Packer qemu/arch-specific definitions
 
 variables {
+  // user-configurable qemu overrides
+  arch = "x86_64"
   qemu_binary = ""
   qemu_machine_type = ""
   qemu_accelerator = ""
   qemu_firmware = ""
 }
-
 variable "qemu_args" {
   type    = list(list(string))
   default = []
 }
 
 locals {
-  qemu_efi_firmware = lookup(lookup(local.arch_vars, var.arch, {}), "firmware", "")
-  debian_boot_keys_efi = join("", [
-    "<wait><wait><wait>e<wait><wait><wait>",
-    "<down><down><down>",
-    "<leftCtrlOn>k<leftCtrlOff><wait>linux ",
-  ])
-  debian_boot_keys_bios = "<wait><wait><wait><esc><wait><wait><wait>"
-  arch_vars = {
+  // arch-specialized aliases
+  qemu_arch_binary = lookup(lookup(local.qemu_arch_defs, var.arch, {}), "qemu_binary", "")
+  qemu_arch_machine_type = lookup(lookup(local.qemu_arch_defs, var.arch, {}), "machine_type", "")
+  qemu_arch_firmware = lookup(lookup(local.qemu_arch_defs, var.arch, {}), "firmware", "")
+  qemu_arch_accelerator  = lookup(lookup(local.qemu_arch_defs, var.arch, {}), "accelerator", "")
+  qemu_arch_qemuargs = concat(var.qemu_args, lookup(lookup(local.qemu_arch_defs, var.arch, {}),
+    "extra_args", []))
+
+  // definitions
+  qemu_arch_defs = {
     "x86_64" = {
-      debian_boot_keys = (var.qemu_firmware != "" ? local.debian_boot_keys_efi : 
-        local.debian_boot_keys_bios )
-      kernel_cmdline = join("", ["vga=788 noprompt quiet -- ",
-        (var.qemu_firmware != "" ? "<f10>" : "<enter>")]),
-      debian_install = "install.amd"
       qemu_binary  = (var.qemu_binary != "" ? var.qemu_binary : "qemu-system-x86_64")
       firmware     = var.qemu_firmware
-      use_pflash   = true
+      use_pflash   = false
       machine_type = (var.qemu_machine_type != "" ? var.qemu_machine_type : "pc")
       accelerator  = (var.qemu_accelerator != "" ? var.qemu_accelerator : "kvm")
       extra_args   = []
     }
 
-    // Kudos: https://github.com/GeoffWilliams/packer_images
     "aarch64" = {
-      debian_boot_keys = local.debian_boot_keys_efi
-      kernel_cmdline = " console=tty0 console=ttyS0 -- <f10>",
-      debian_install = "install.a64"
       qemu_binary  = (var.qemu_binary != "" ? var.qemu_binary : "qemu-system-aarch64")
       firmware     = var.qemu_firmware
       use_pflash   = false
@@ -49,13 +43,11 @@ locals {
       extra_args   = [
         ["-cpu", "cortex-a57"],
         ["-boot", "strict=off"],
-        # uncomment for graphics console support
+        # use graphics console support (otherwise Packer send keys doesn't work)
         ["-device", "virtio-gpu-pci"], 
         ["-device", "usb-ehci"],
         ["-device", "usb-kbd"],
         ["-monitor", "none"],
-        ["-device", "virtio-net-device,netdev=net0"],
-        ["-netdev", "type=user,id=net0,hostfwd=tcp::20022-:22"],
       ]
     }
   }

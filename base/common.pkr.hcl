@@ -8,7 +8,6 @@ packer {
 }
 
 variables {
-  arch = "x86_64"
   vm_name = "basevm"
   vm_locale = "en_US"
   vm_timezone = "Europe/Bucharest"
