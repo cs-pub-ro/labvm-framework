@@ -1,11 +1,10 @@
 variables {
-  // Note: multi-arch not yet supported for Ubuntu
-  arch = "x86_64"
   vm_hostname = "ubuntu"
   vm_prepare_script = "base-prepare.sh"
   vm_install_base = "base-debian.d/"
   vm_ubuntu_ver = "22"
   vm_ubuntu_kernel_pkg = "linux-image-virtual"
+  vm_send_boot_keys = true
   source_image = "https://releases.ubuntu.com/22.04/ubuntu-22.04.3-live-server-amd64.iso"
   source_checksum = "none"
 }
@@ -16,11 +15,11 @@ source "qemu" "base" {
   headless      = false
 
   // Arch-specific qemu config
-  qemu_binary  = var.qemu_binary
-  machine_type = var.qemu_machine_type
-  firmware     = var.qemu_bios
-  accelerator  = var.qemu_accelerator
-  qemuargs     = concat([], var.qemu_extra_args)
+  qemu_binary  = local.qemu_arch_binary
+  machine_type = local.qemu_arch_machine_type
+  firmware     = local.qemu_arch_firmware
+  accelerator  = local.qemu_arch_accelerator
+  qemuargs     = local.qemu_arch_qemuargs
   // Virtual Hardware Specs
   memory         = 2048
   cpus           = 2
@@ -59,15 +58,8 @@ source "qemu" "base" {
   }
 
   boot_wait = (var.use_backing_file ? null : var.boot_wait)
-  boot_command = (var.use_backing_file ? null : [
-    "c<wait>",
-    "linux /casper/vmlinuz autoinstall ds=\"nocloud;s=http://{{.HTTPIP}}:{{.HTTPPort}}/\" ---",
-    "<enter><wait>",
-    "initrd /casper/initrd",
-    "<enter><wait>",
-    "boot",
-    "<enter>"
-  ])
+  boot_command = ((var.use_backing_file && var.vm_send_boot_keys) ? null :
+    local.ubuntu_boot_commands)
   shutdown_command  = "sudo /sbin/shutdown -h now"
 }
 

@@ -1,0 +1,1 @@
+../../base/common_arch.pkr.hcl
