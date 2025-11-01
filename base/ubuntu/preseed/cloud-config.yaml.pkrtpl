@@ -8,10 +8,8 @@ autoinstall:
     disable_components: []
     preserve_sources_list: false
     primary:
-      - arches: [amd64, i386]
-        uri: http://archive.ubuntu.com/ubuntu
       - arches: [default]
-        uri: http://ports.ubuntu.com/ubuntu-ports
+        uri: http://archive.ubuntu.com/ubuntu
   early-commands:
     - sudo systemctl stop ssh
   locale: ${locale}
