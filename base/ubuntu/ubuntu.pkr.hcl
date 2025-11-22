@@ -40,7 +40,7 @@ source "qemu" "base" {
 
   ssh_username      = var.ssh_username
   ssh_password      = var.ssh_password
-  ssh_timeout       = "30m"
+  ssh_timeout       = "60m"  # qemu for multi-arch is very sloooow
   host_port_min     = var.qemu_ssh_forward
   host_port_max     = var.qemu_ssh_forward
 

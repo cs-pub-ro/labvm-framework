@@ -11,6 +11,7 @@ autoinstall:
       - arches: [default]
         uri: http://archive.ubuntu.com/ubuntu
   early-commands:
+    - rm -f /etc/apt/apt.conf.d/50command-not-found
     - sudo systemctl stop ssh
   locale: ${locale}
   keyboard:
@@ -37,6 +38,7 @@ autoinstall:
     disable_root: false
     timezone: ${timezone}
   late-commands:
+    - curtin in-target --target=/target -- rm -f /etc/apt/apt.conf.d/50command-not-found
     - sed -i -e 's/^#\?PasswordAuthentication.*/PasswordAuthentication yes/g' /target/etc/ssh/sshd_config
     - echo '${ssh_username} ALL=(ALL) NOPASSWD:ALL' > /target/etc/sudoers.d/${ssh_username}
     - curtin in-target --target=/target -- chmod 440 /etc/sudoers.d/${ssh_username}
