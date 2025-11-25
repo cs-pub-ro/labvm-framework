@@ -19,7 +19,13 @@ echo \
 	"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] $DOCKER_REPO_URL \
 	$(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 pkg_init_update
-pkg_install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+_DOCKER_PKGS=(docker-ce docker-ce-cli)
+if [[ -n "$DOCKER_FIX_VERSION" ]]; then
+	# use `sudo apt-cache madison docker-ce` to see them
+	_DOCKER_PKGS=(docker-ce="$DOCKER_FIX_VERSION" docker-ce-cli="$DOCKER_FIX_VERSION")
+fi
+pkg_install "${_DOCKER_PKGS[@]}" containerd.io docker-buildx-plugin docker-compose-plugin
 
 # MTU fix for OpenStack VMs
 cat << EOF > /etc/docker/daemon.json
