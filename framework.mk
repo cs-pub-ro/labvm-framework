@@ -113,8 +113,10 @@ init:
 	$(foreach vm,$(INIT_GOAL),packer init "$(-vm-packer-src)";)
 
 # ssh into a Packer/qemu VM
+SSH_COMMAND ?= $(SSH) $(SSH_ARGS) $(if $(SSH_PORT),-p $(SSH_PORT)) \
+			   $(SSH_USER)@$(SSH_HOST)
 ssh:
-	$$(SSH) $$(SSH_ARGS) $$(SSH_USER)@127.0.0.1 -p $$(SSH_PORT)
+	$$(SSH_COMMAND)
 # creates the build directory
 $$(BUILD_DIR)/:
 	mkdir -p "$$@"

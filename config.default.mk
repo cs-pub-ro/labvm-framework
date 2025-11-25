@@ -57,7 +57,10 @@ PACKER_ARGS += $(PACKER_ARGS_EXTRA)
 
 # ssh goal parameters
 SSH ?= ssh
-SSH_USER ?= student
+SSH_USER ?= $(VM_USER)
+SSH_HOST ?= localhost
 SSH_PORT ?= 20022
 SSH_ARGS ?= -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null
+# Note: this is the default command (you can also override it):
+#SSH_COMMAND ?= $(SSH) $(SSH_ARGS) $(SSH_USER)@$(SSH_HOST) -p $(SSH_PORT)
 
