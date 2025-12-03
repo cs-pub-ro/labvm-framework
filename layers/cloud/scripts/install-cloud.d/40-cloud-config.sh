@@ -19,7 +19,7 @@ rm -f /etc/netplan/50-cloud-init.yaml
 rsync -ai --chown="root:root" --exclude "*.tpl" \
 	"$SRC/etc/" "/etc/"
 
-echo "user: $VM_USER" > "/etc/cloud/cloud.cfg.d/10-user.cfg"
+echo "users: [$VM_USER]" > "/etc/cloud/cloud.cfg.d/10-user.cfg"
 
 # copy cloud config for VM distro
 CLOUD_TPL=cloud.debian.tpl
