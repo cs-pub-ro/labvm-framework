@@ -18,7 +18,6 @@ variables {
   vm_install_stage1 = "install-stage1.d/"
   vm_install_stage2 = "install-stage2.d/"
   vm_authorized_keys = ""
-  qemu_unmap = false
   qemu_ssh_forward = 20022
   disk_size = 8192
   source_image = "./path/to/base-vm.qcow2"

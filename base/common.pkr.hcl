@@ -15,7 +15,6 @@ variables {
   vm_pause = 0
   vm_debug = 0
   vm_scripts_dir = "scripts/"
-  qemu_unmap = false
   qemu_ssh_forward = 20022
   disk_size = 8192
   use_backing_file = false

@@ -7,6 +7,8 @@ variables {
   qemu_machine_type = ""
   qemu_accelerator = ""
   qemu_firmware = ""
+  qemu_unmap = false
+  qemu_extra_drive = ""
 }
 variable "qemu_args" {
   type    = list(list(string))
@@ -15,12 +17,16 @@ variable "qemu_args" {
 
 locals {
   // arch-specialized aliases
+  _qemu_discard = (var.qemu_unmap ? ",discard=unmap,detect-zeroes=unmap" : "")
+  qemu_def_drv_args = "if=virtio,format=qcow2,cache=writeback${local._qemu_discard}"
+  qemu_def_drive = ["-drive", "file=${var.output_directory}/{{ .Name }},${local.qemu_def_drv_args}"]
   qemu_arch_binary = lookup(lookup(local.qemu_arch_defs, var.arch, {}), "qemu_binary", "")
   qemu_arch_machine_type = lookup(lookup(local.qemu_arch_defs, var.arch, {}), "machine_type", "")
   qemu_arch_firmware = lookup(lookup(local.qemu_arch_defs, var.arch, {}), "firmware", "")
   qemu_arch_accelerator  = lookup(lookup(local.qemu_arch_defs, var.arch, {}), "accelerator", "")
-  qemu_arch_qemuargs = concat(var.qemu_args, lookup(lookup(local.qemu_arch_defs, var.arch, {}),
-    "extra_args", []))
+  qemu_arch_qemuargs = concat([local.qemu_def_drive], (var.qemu_extra_drive == "" ? [] :
+    [["-drive", var.qemu_extra_drive]]), var.qemu_args, 
+    lookup(lookup(local.qemu_arch_defs, var.arch, {}), "extra_args", []))
 
   // definitions
   qemu_arch_defs = {
