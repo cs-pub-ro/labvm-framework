@@ -19,6 +19,8 @@ VM_SSH_LEGACY_ALGS=${VM_SSH_LEGACY_ALGS:-0}
 VM_PASSWORD=${VM_PASSWORD:-}
 # Disable SSH password auth (defaults to 1 if VM_PASSWORD is not set, 0 otherwise)
 VM_SSH_PASSWORD_AUTH=${VM_SSH_PASSWORD_AUTH:-}
+# Enable shared cloud console security workarounds
+VM_CONSOLE_SECURITY=${VM_CONSOLE_SECURITY:-}
 
 # source VM config environment
 if [[ -f "/etc/vm-config/env.sh" ]]; then
