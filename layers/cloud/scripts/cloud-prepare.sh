@@ -5,6 +5,10 @@
 
 SRC=$(sh_get_script_path)
 
+if [[ -n "$VM_CLOUD_TESTING" ]]; then
+	# disable (remove) all scripts during `cloud_test` goal
+	rm -f "$SRC/install-cloud.d/"*.sh
+fi
 
 # Alternative way of enabling snippets (not preferred as makes task ordering
 # difficult to understand)

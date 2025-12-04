@@ -40,8 +40,9 @@ $(vm)_test: packer-args-extra=-var "use_backing_file=true"
 $(vm)_test: packer-args-extra+=-var 'qemu_args=[["-snapshot"]]'
 $(vm)_test: packer-args-extra+=-var 'qemu_extra_drive=$(VM_CLOUD_LOCAL_QEMU_DISK)'
 $(vm)_test: $(-vm-dest-timestamp) $(-vm-dest-dir)/cloud-localds.iso
-	$(let -vm-source-image,$(-vm-dest-image), \
-		$(let -vm-name,$(-vm-name)_test,$(vm_packer_cmd)))
+	$(let $(vm)-extra-envs,$($(vm)-extra-envs)"VM_CLOUD_TESTING=1"$(comma),
+		$(let -vm-source-image,$(-vm-dest-image), \
+			$(let -vm-name,$(-vm-name)_test,$(vm_packer_cmd))))
 $(-vm-dest-dir)/cloud-localds.iso:
 	echo "$$$$$(_VM_CLOUD_LOCALDATA_VAR)" > "$$(@D)/user-data"
 	echo "instance-id: $$(shell uuidgen)" > $$(@D)/meta-data
