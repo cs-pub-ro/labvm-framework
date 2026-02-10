@@ -31,9 +31,13 @@ else
 	echo "PermitRootLogin no" >> /etc/ssh/sshd_config.d/60-cloud-auth.conf
 fi
 
+# useful for some antique OpenStack / Guacamole versions
 if [[ "$VM_SSH_LEGACY_ALGS" == "1" ]]; then
-	( echo "HostkeyAlgorithms +ssh-rsa"; 
-	  echo "PubkeyAcceptedAlgorithms +ssh-rsa" ) \
+	(
+		echo "HostkeyAlgorithms +ssh-rsa";
+		echo "PubkeyAcceptedAlgorithms +ssh-rsa";
+		echo "KexAlgorithms +diffie-hellman-group1-sha1";
+	) \
 		> "/etc/ssh/sshd_config.d/30-legacy-algs.conf"
 else
 	rm -f "/etc/ssh/sshd_config.d/30-legacy-algs.conf"
