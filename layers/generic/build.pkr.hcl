@@ -23,6 +23,7 @@ variables {
   source_image = "./path/to/base-vm.qcow2"
   source_checksum = "none"
   use_backing_file = true
+  qemu_vga = ""
   output_directory = "/tmp/packer-out"
   ssh_username = "TODO"
   ssh_password = "TODO"
@@ -64,6 +65,7 @@ source "qemu" "vm" {
   disk_size      = var.disk_size
   disk_interface = "virtio"
   net_device     = "virtio-net"
+  vga            = var.qemu_vga
   // disk usage optimizations (unmap zeroes as free space)
   disk_discard   = (var.qemu_unmap ? "unmap" : "")
   disk_detect_zeroes = (var.qemu_unmap ? "unmap" : "")

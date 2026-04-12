@@ -23,7 +23,7 @@ BASE ?= debian
 $(call vm_new_base_$(BASE),base)
 
 # example versioning & unified prefix scheme
-vm-ver = 2024.01
+vm-ver = 2026.01
 vm-prefix = example_$(vm-ver)
 
 # Example generic VM with customizations
