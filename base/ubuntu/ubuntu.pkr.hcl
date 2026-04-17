@@ -5,6 +5,7 @@ variables {
   vm_ubuntu_ver = "22"
   vm_ubuntu_kernel_pkg = "linux-image-virtual"
   vm_send_boot_keys = true
+  vm_ubuntu_apt_mirror = "http://archive.ubuntu.com/ubuntu/"
   source_image = "https://releases.ubuntu.com/22.04/ubuntu-22.04.3-live-server-amd64.iso"
   source_checksum = "none"
 }
@@ -54,6 +55,7 @@ source "qemu" "base" {
       ssh_password = var.ssh_password,
       crypted_password = var.vm_crypted_password,
       ubuntu_kernel_pkg = var.vm_ubuntu_kernel_pkg
+      ubuntu_apt_mirror = var.vm_ubuntu_apt_mirror
     })
   }
 

@@ -7,6 +7,9 @@ UBUNTU_VERSION ?= 24
 BASE_UBUNTU_PKR_SRC ?= $(FRAMEWORK_DIR)/base/ubuntu
 # provision base framework scripts
 BASE_UBUNTU_SCRIPTS_DIR ?= $(abspath $(FRAMEWORK_DIR)/scripts)/
+# apt-get mirror to use
+BASE_UBUNTU_APT_MIRROR ?= http://archive.ubuntu.com/ubuntu/
+
 # expand ubuntu ISO
 _UBUNTU_ISO_FULL ?= $(call _find_last_file,$(BASE_ISO_DIR)/$(UBUNTU_ISO_NAME))
 
@@ -21,6 +24,7 @@ $(1)-packer-args += -var 'vm_scripts_dir=' \
 	$$(call _packer_var,vm_hostname,$$(VM_HOSTNAME)) \
 	$$(call _packer_var,vm_locale,$$(VM_LOCALE)) \
 	$$(call _packer_var,vm_timezone,$$(VM_TIMEZONE)) \
+	$$(call _packer_var,vm_ubuntu_apt_mirror,$$(BASE_UBUNTU_APT_MIRROR)) \
 	$$(call _packer_var,vm_crypted_password,$$$$(VM_CRYPTED_PASSWORD)) \
 	$$(call _packer_var,vm_ubuntu_ver,$$($(1)-ver))
 $(1)-copy-scripts ?= $$(BASE_UBUNTU_SCRIPTS_DIR)

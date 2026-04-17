@@ -4,15 +4,15 @@
 autoinstall:
   version: 1
   apt:
-    geoip: true
+    geoip: false
     disable_components: []
     preserve_sources_list: false
-    primary:
-      - arches: [default]
-        uri: http://archive.ubuntu.com/ubuntu
+    mirror-selection:
+      primary:
+        - uri: "${ubuntu_apt_mirror}"
+  updates: "security"
   early-commands:
-    - rm -f /etc/apt/apt.conf.d/50command-not-found
-    - sudo systemctl stop ssh
+    - sh -c 'rm -f /etc/apt/apt.conf.d/50command-not-found'
   locale: ${locale}
   keyboard:
     layout: us
