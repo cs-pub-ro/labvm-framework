@@ -2,8 +2,10 @@
 [[ -n "$__INSIDE_VM_RUNNER" ]] || { echo "Only call within VM runner!" >&2; return 1; }
 ## Install XFCE packages
 
+DISTRO_ID=$(. /etc/os-release && echo "$ID")
+
 XFCE4_PACKAGES=(
-    xfwm4 xfce4-session xfwm4-theme-breeze
+	xserver-xorg xfwm4 xfce4-session xfwm4-theme-breeze
     xfdesktop4 # xfce desktop background, icons and root menu manager
     xfce4-panel # panel for Xfce4 desktop environment
     xfce4-settings # graphical application for managing Xfce settings
@@ -25,8 +27,10 @@ XFCE4_PACKAGES=(
 pkg_install --no-install-recommends "${XFCE4_PACKAGES[@]}"
 
 # we also need a browser
-pkg_install firefox-esr
+if [[ "$DISTRO_ID" == "debian" ]]; then FIREFOX_PKG=firefox-esr; fi
+FIREFOX_PKG=${FIREFOX_PKG:-firefox}
+pkg_install "$FIREFOX_PKG"
 
 # install lightdm session manager
-pkg_install lightdm
+pkg_install --no-install-recommends lightdm
 
