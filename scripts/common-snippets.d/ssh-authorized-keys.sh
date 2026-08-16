@@ -13,6 +13,10 @@ SSH_MASTER_AUTHKEYS=/etc/ssh/authorized_keys
 SRC=$(sh_get_script_path)
 _SSH_AUTHKEYS_FROM="$VM_AUTHORIZED_KEYS"
 
+# find the sshd systemd unit name
+ssh_unit=$(systemctl list-unit-files --no-legend --no-pager \
+	| awk '$1=="sshd.service"{print $1; exit} $1=="ssh.service"{print $1; exit}')
+
 sh_log_debug "ssh-authorized-keys: VM_AUTHORIZED_KEYS=$VM_AUTHORIZED_KEYS"
 if [[ -n "$VM_AUTHORIZED_KEYS" ]]; then
 	[[ -f "$_SSH_AUTHKEYS_FROM" ]] || _SSH_AUTHKEYS_FROM="$SRC/$VM_AUTHORIZED_KEYS"
@@ -37,7 +41,7 @@ if [[ -f "$SSH_MASTER_AUTHKEYS" ]]; then
 	cat <<EOF >"/etc/ssh/sshd_config.d/10-authorized.conf"
 AuthorizedKeysFile .ssh/authorized_keys $SSH_MASTER_AUTHKEYS
 EOF
-	systemctl reload ssh
+	systemctl reload "$ssh_unit"
 	sh_log_info "ssh-authorized-keys: master keys configured!"
 fi
 

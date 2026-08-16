@@ -6,7 +6,11 @@
 
 sh_log_info "Rebooting the system..."
 
-systemctl stop sshd.service
+# find the sshd systemd unit name
+ssh_unit=$(systemctl list-unit-files --no-legend --no-pager \
+	| awk '$1=="sshd.service"{print $1; exit} $1=="ssh.service"{print $1; exit}')
+systemctl stop "$ssh_unit"
+
 nohup shutdown -r now </dev/null >/dev/null 2>&1 &
 sleep 3
 exit 0
