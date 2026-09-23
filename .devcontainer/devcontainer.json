@@ -1,0 +1,22 @@
+{
+	"name": "labvm-framework",
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+	// host KVM passthrough (Linux host only)
+	"runArgs": [
+		"--device", "/dev/kvm"
+	],
+	"mounts": [
+		"source=~/.cache/packer,target=~/.cache/packer,type=bind"
+	],
+	"containerEnv": {
+		"BUILD_DIR": "~/.cache/packer"
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": ["hashicorp.packer"]
+		}
+	},
+	"postCreateCommand": "packer version && qemu-system-x86_64 --version | head -1 && (test -r /dev/kvm && test -w /dev/kvm && echo 'KVM: OK' || echo 'KVM: MISSING (TCG emulation, slow)')"
+}
