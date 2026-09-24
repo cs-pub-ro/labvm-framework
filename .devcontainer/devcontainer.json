@@ -8,10 +8,12 @@
 		"--device", "/dev/kvm"
 	],
 	"mounts": [
-		"source=~/.cache/packer,target=~/.cache/packer,type=bind"
+		"source=${localEnv:BUILD_DIR:~/.cache/packer},target=/tmp/packer/cache,type=bind",
+		"source=${localEnv:BASE_ISO_DIR:~/Downloads/iso},target=/tmp/packer/iso,type=bind"
 	],
 	"containerEnv": {
-		"BUILD_DIR": "~/.cache/packer"
+		"BUILD_DIR": "/tmp/packer/cache",
+		"BASE_ISO_DIR": "/tmp/packer/iso"
 	},
 	"customizations": {
 		"vscode": {

@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 	ca-certificates curl gpg \
 	make git openssh-client sudo \
 	# qemu userland (x86_64 + aarch64 guests) + tooling
-	qemu-system-x86 qemu-system-arm qemu-utils \
+	qemu-system-x86 qemu-system-arm qemu-utils xvfb \
 	# framework build/test helpers
 	whois genisoimage zerofree uuid-runtime rsync \
 && \
