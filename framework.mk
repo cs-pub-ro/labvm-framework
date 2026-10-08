@@ -2,6 +2,7 @@
 
 # prerequisites
 include $(FRAMEWORK_DIR)/lib/utils.mk
+include $(FRAMEWORK_DIR)/lib/qemu_debug.mk
 # protect against double inclusion
 $(call mk_include_guard,vm_framework)
 

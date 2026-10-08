@@ -51,7 +51,7 @@ locals {
 source "qemu" "vm" {
   // VM Info:
   vm_name       = var.vm_name
-  headless      = false
+  headless      = var.headless
 
   // Arch-specific qemu config
   qemu_binary  = local.qemu_arch_binary

@@ -52,9 +52,13 @@ PACKER_ARGS_EXTRA ?=
 PACKER_ARGS ?= -on-error=abort $(ARCH_PACKER_ARGS) $(if $(PACKER_DEBUG),-debug) \
 			   $(call _packer_var,vm_pause,$(PAUSE)) \
 			   $(call _packer_var,vm_debug,$(DEBUG)) \
+			   $(call _packer_var,headless,$(HEADLESS_PACKER)) \
+			   $(call _packer_var,qemu_monitor,$(QEMU_MONITOR)) \
+			   $(call _packer_var,qemu_serial,$(QEMU_SERIAL)) \
 			   $(call _packer_var,ssh_username,$(VM_USER)) \
 			   $(call _packer_var,ssh_password,$(VM_PASSWORD))
 PACKER_ARGS += $(PACKER_ARGS_EXTRA)
+# see lib/qemu_debug.mk for qemu debugging vars/utils
 
 # ssh goal parameters
 SSH ?= ssh
