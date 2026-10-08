@@ -26,6 +26,7 @@ UBUNTU_VERSION ?= 24
 BASE_ISO_DIR ?= $(HOME)/Downloads/iso
 UBUNTU_ISO_NAME ?= ubuntu-$(ver).*-live-server-$(ARCH_ALT).iso
 DEBIAN_ISO_NAME ?= debian-$(ver).*-$(ARCH_ALT)-netinst.iso
+ARCH_ISO_NAME ?= archlinux-$(ARCH)*.iso
 
 # VM defaults (for base images)
 VM_TIMEZONE ?= Europe/Bucharest

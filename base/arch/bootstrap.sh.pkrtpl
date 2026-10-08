@@ -1,0 +1,18 @@
+#!/bin/bash
+# Simple Packer variables bootstrapping script
+
+set -eo pipefail
+
+PACKER_URL="$1"
+VM_HOSTNAME='${var.vm_hostname}'
+VM_LOCALE='${var.vm_locale}'
+VM_TIMEZONE='${var.vm_timezone}'
+VM_USER='${var.ssh_username}'
+VM_CRYPTED_PASSWORD='${var.vm_crypted_password}'
+ARCH='${arch}'
+USE_EFI='${use_efi}'
+
+echo "Running $PACKER_URL/arch-install.sh"
+curl -o /tmp/arch-install.sh "$PACKER_URL/arch-install.sh"
+source /tmp/arch-install.sh
+
