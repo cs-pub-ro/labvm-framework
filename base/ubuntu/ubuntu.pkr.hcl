@@ -1,7 +1,8 @@
 variables {
   vm_hostname = "ubuntu"
-  vm_prepare_script = "base-prepare.sh"
-  vm_install_base = "base-debian.d/"
+  vm_prepare_script = "prepare-multistage.sh"
+  vm_prepare_dir = "base-debian.d"
+  vm_prepare_range = "1-99"
   vm_ubuntu_ver = "22"
   vm_ubuntu_kernel_pkg = "linux-image-virtual"
   vm_send_boot_keys = true

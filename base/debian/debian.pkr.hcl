@@ -1,7 +1,8 @@
 variables {
   vm_hostname = "debian"
-  vm_prepare_script = "base-prepare.sh"
-  vm_install_base = "base-debian.d/"
+  vm_prepare_script = "prepare-multistage.sh"
+  vm_prepare_dir = "base-debian.d"
+  vm_prepare_range = "1-99"
   vm_debian_ver = "13"
   vm_send_boot_keys = true
   source_image = "https://cdimage.debian.org/debian-cd/12.9.0/amd64/iso-cd/debian-12.9.0-amd64-netinst.iso"

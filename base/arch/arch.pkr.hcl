@@ -1,7 +1,8 @@
 variables {
   vm_hostname = "arch"
-  vm_prepare_script = ""
-  vm_install_base = "base-arch.d/"
+  vm_prepare_script = "prepare-multistage.sh"
+  vm_prepare_dir = "base-arch.d"
+  vm_prepare_range = "1-99"
   vm_send_boot_keys = true
   source_image = "https://mirrors.kernel.org/archlinux/iso/latest/archlinux-x86_64.iso"
   source_checksum = "none"

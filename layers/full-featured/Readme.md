@@ -34,7 +34,7 @@ full-src-from = base
 
 ## Customization
 
-The snippets are organized inside the `full-snippets.d` directory, which will
+The snippets are organized inside the `prepare.d` directory, which will
 get copied to `/opt/vm-scripts/` by the first Packer provisioning command.
 
 The scripts use the following numbering convention:
@@ -46,8 +46,8 @@ The scripts use the following numbering convention:
 - `20+`: install scripts sourced on `stage2` after the reboot.
 
 Note: The snippets are automatically symlinked to the appropiate VM stage by the
-[`full-prepare.sh`](./scripts/full-prepare.sh) script using the above
-conventions.
+shared [`prepare-multistage.sh`](../../scripts/prepare-multistage.sh) script using the
+above conventions.
 
 If you wish to cherry-pick individual scripts, you must manually study them for
 any inter-dependencies!

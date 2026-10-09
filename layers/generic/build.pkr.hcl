@@ -14,9 +14,9 @@ variables {
   vm_noinstall = 0
   vm_scripts_dir = "scripts/"
   vm_pre_copy_cmd = ""
-  vm_prepare_script = "vm-prepare.sh"
-  vm_install_stage1 = "install-stage1.d/"
-  vm_install_stage2 = "install-stage2.d/"
+  vm_prepare_script = "prepare-multistage.sh"
+  vm_prepare_range1 = "1-19"
+  vm_prepare_range2 = "1,20-99"
   vm_authorized_keys = ""
   qemu_ssh_forward = 20022
   disk_size = 8192
@@ -94,8 +94,6 @@ build {
     inline = [
       "mkdir -p $VM_SCRIPTS_DIR",
       "cd $VM_SCRIPTS_DIR",
-      "[ -z '${var.vm_install_stage1}' ] || mkdir -p '${var.vm_install_stage1}'",
-      "[ -z '${var.vm_install_stage2}' ] || mkdir -p '${var.vm_install_stage2}'",
       var.vm_pre_copy_cmd,
       "chown ${var.ssh_username}:${var.ssh_username} $VM_SCRIPTS_DIR -R"
     ]
@@ -110,35 +108,25 @@ build {
     destination = "${local.scripts_dir}/"
   }
 
-  # default VM build pipeline: prepare, stage1, optionally reboot, finally stage2
+  # default VM build pipeline: two stages, each running the shared prepare
+  # script over the single prepare.d dir with a numeric range
   provisioner "shell" {
-    # run the preparation script (if any)
+    # first stage (before the reboot, where one is properly expected)
     inline = [
       "${local.provision_init}",
-      "[[ -n '${var.vm_prepare_script}' ]] || { sh_log_info 'SKIP prepare script!'; exit 0; }",
-      "vm_run_script \"${var.vm_prepare_script}\""
+      "[[ -n '${var.vm_prepare_range1}' ]] || { sh_log_info 'SKIP stage 1!'; exit 0; }",
+      "VM_PREPARE_RANGE='${var.vm_prepare_range1}' vm_run_script \"${var.vm_prepare_script}\""
     ]
     expect_disconnect = true
     execute_command = local.sudo
     environment_vars = local.envs
   }
   provisioner "shell" {
-    # run the first stage scripts (where a reboot is properly expected)
+    # second stage (after the reboot)
     inline = [
       "${local.provision_init}",
-      "[[ -n '${var.vm_install_stage1}' ]] || { sh_log_info 'SKIP stage 1!'; exit 0; }",
-      "vm_run_scripts \"${var.vm_install_stage1}\""
-    ]
-    expect_disconnect = true
-    execute_command = local.sudo
-    environment_vars = local.envs
-  }
-  provisioner "shell" {
-    # run the second stage scripts
-    inline = [
-      "${local.provision_init}",
-      "[[ -n '${var.vm_install_stage2}' ]] || { sh_log_info 'SKIP stage 2!'; exit 0; }",
-      "vm_run_scripts \"${var.vm_install_stage2}\""
+      "[[ -n '${var.vm_prepare_range2}' ]] || { sh_log_info 'SKIP stage 2!'; exit 0; }",
+      "VM_PREPARE_RANGE='${var.vm_prepare_range2}' vm_run_script \"${var.vm_prepare_script}\""
     ]
     execute_command = local.sudo
     environment_vars = local.envs

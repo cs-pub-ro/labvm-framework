@@ -10,8 +10,6 @@ VM_CLOUD_SRC_FROM ?= main
 
 define _vm_new_layer_cloud_tpl
 $(call check-var,_vm_new_layer_generic_tpl)$(_vm_new_layer_generic_tpl)
-$(1)-script-prepare = cloud-prepare.sh
-$(1)-script-stage1 = install-cloud.d
 $(1)-copy-scripts = $$(VM_CLOUD_SCRIPTS_DIR)
 $(1)-src-from = $$(VM_CLOUD_SRC_FROM)
 $(1)-extra-rules = $$(vm_cloud_test_rule)
@@ -39,6 +37,8 @@ $(vm)_test: PAUSE=1
 $(vm)_test: packer-args-extra=-var "use_backing_file=true"
 $(vm)_test: packer-args-extra+=-var 'qemu_args=[["-snapshot"]]'
 $(vm)_test: packer-args-extra+=-var 'qemu_extra_drive=$(VM_CLOUD_LOCAL_QEMU_DISK)'
+# run no provisioning snippets during the test (just boot the base image)
+$(vm)_test: packer-args-extra+=-var 'vm_prepare_range1=' -var 'vm_prepare_range2='
 $(vm)_test: $(-vm-dest-timestamp) $(-vm-dest-dir)/cloud-localds.iso
 	$(let $(vm)-extra-envs,$($(vm)-extra-envs)"VM_CLOUD_TESTING=1"$(comma),
 		$(let -vm-source-image,$(-vm-dest-image), \

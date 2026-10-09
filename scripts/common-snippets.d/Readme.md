@@ -9,12 +9,12 @@ provisioning stage.
 
 ## Usage
 
-There are several ways to call snippets:
+There are several ways to call snippets (all from the single `prepare.d` dir, 
+selected by the stage ranges):
 
-1. Symlink them to your preferred stage's directory (e.g., [generic 
-   layer's](../../layers/generic/Readme.md) `install-stage2.d`) using your 
-   preparation script (`vm-prepare.sh`). This makes the actual ordering of the
-   stage scripts somewhat harder to understand...
+1. Copy / symlink the snippet into `prepare.d` with a `NN-` prefix matching the 
+   stage you want (e.g., [generic 
+   layer's](../../layers/generic/Readme.md) default second-stage range `20-99`).
 
 2. Create a dummy script sourcing the snippet, e.g. `32-ssh-authorized-keys`
    containing:

@@ -10,9 +10,6 @@ VM_FULL_FEATURED_SRC_FROM ?= base
 
 define _vm_new_layer_full_featured_tpl
 $(call check-var,_vm_new_layer_generic_tpl)$(_vm_new_layer_generic_tpl)
-$(1)-script-prepare = full-prepare.sh
-$(1)-script-stage1 = install-stage1.d
-$(1)-script-stage2 = install-stage2.d
 $(1)-copy-scripts = $$(VM_FULL_FEATURED_SCRIPTS_DIR)
 $(1)-src-from = $$(VM_FULL_FEATURED_SRC_FROM)
 

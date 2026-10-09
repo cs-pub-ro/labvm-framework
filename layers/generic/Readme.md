@@ -13,19 +13,21 @@ not error if they do not exist!):
 1. Sync files from a local `vm_scripts_src` path (defaults to `scripts/` 
    relative to the packer file, so make sure you use absolute path inside your 
    Makefile!) onto the VM (hardcoded path: `/opt/vm-scripts/` -- used as base for
-   all other stages!);
+   all other stages!). All provisioning snippets live in a single `prepare.d` 
+   dir, each named `NN-name.sh`;
 
-2. Execute the `vm-prepare.sh` scripts (from the synced scripts dir); you can use
-   this to setup / symlink the scripts for the two stages following it (see the
-   example);
+2. Run the first stage: `prepare-multistage.sh` over `prepare.d` with a numeric
+   range (default `1-19`); the last script may issue an optional reboot, it will
+   be properly awaited by Packer; use this stage to fix networking and do kernel /
+   bootloader-level configuration (e.g., `net.ifnames` cmdline options);
 
-3. Execute the first installation stage (sorted scripts inside `install-stage1.d` 
-   vm-scripts path); the last script may issue an optional reboot, it will be
-   properly awaited by Packer; you can use this stage to fix networking and do 
-   kernel / bootloader-level configuration (e.g., `net.ifnames` cmline options);
+3. Run the second (and last) stage: `prepare-multistage.sh` over `prepare.d` with
+   a numeric range (default `1,20-99`); the init scripts (`NN < 10`) are sourced
+   again here, followed by all the install scripts expecting a proper kernel setup
+   (ran after the reboot).
 
-4. Execute the second (and last) stage (`install-stage2.d`); in here, you should
-   put all other scripts expecting a proper kernel setup (ran after the reboot);
+The ranges are just the `NN` prefix filters, so a snippet runs in a stage when its
+`NN` falls inside that stage's range -- no symlinks are involved.
 
 You can include (or simply inspire from) the layer's `build.mk` containing the
 VM framework macros to use for building a VM.
@@ -49,7 +51,7 @@ main-name = examplevm_$(examplevm-ver)
 # Note: make sure the directory ends with '/' so its contents are copied!
 main-copy-scripts = $(abspath ./main/scripts)/
 # the *-copy-scripts is a list, so you can sync multiple directories, e.g.:
-#main-copy-scripts += $(abspath ./vm-prepare.sh) $(abspath ./overrides)/
+#main-copy-scripts += $(abspath ./my-prepare.sh) $(abspath ./overrides)/
 ```
 
 Note: this generic layer does NOT customize anything on the VM image -- it is

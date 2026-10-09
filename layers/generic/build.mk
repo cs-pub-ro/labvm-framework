@@ -13,13 +13,11 @@ VM_GENERIC_SRC_FROM ?= base
 VM_AUTHORIZED_KEYS ?= $(abspath $(_find_file_in_path *authorized_keys*,\
 					  ./dist $(USER_CONFIG_DIR)/dist))
 
-# macros to check whether script/dir exists and supply provisioning defaults
+# macros to check whether a per-VM override exists and supply provisioning defaults
 -vm-generic-prepare = $(strip $(call _def_value,$(vm)-script-prepare,\
-		$(notdir $(call _find_file_in_path,vm-prepare.sh,$(-vm-copy-scripts)))))
--vm-generic-stage1 = $(strip $(call _def_value,$(vm)-script-stage1,\
-		$(notdir $(call _find_file_in_path,install-stage1.d,$(-vm-copy-scripts)))))
--vm-generic-stage2 = $(strip $(call _def_value,$(vm)-script-stage2,\
-		$(notdir $(call _find_file_in_path,install-stage2.d,$(-vm-copy-scripts)))))
+		prepare-multistage.sh))
+-vm-generic-range1 = $(strip $(call _def_value,$(vm)-script-range1,1-19))
+-vm-generic-range2 = $(strip $(call _def_value,$(vm)-script-range2,1$(comma)20-99))
 
 -vm-generic-pre-copy-cmd = $(call _def_value,$(vm)-pre-copy-cmd,)
 -vm-generic-extra-envs = $(call _def_value,$(vm)-extra-envs,)
@@ -34,8 +32,8 @@ $(1)-packer-args += -var 'vm_scripts_dir=' \
 	-var 'vm_scripts_list=$$(-vm-copy-scripts-list)' \
 	-var 'vm_pre_copy_cmd=$$(-vm-generic-pre-copy-cmd)' \
 	-var 'vm_prepare_script=$$(-vm-generic-prepare)' \
-	-var 'vm_install_stage1=$$(-vm-generic-stage1)' \
-	-var 'vm_install_stage2=$$(-vm-generic-stage2)' \
+	-var 'vm_prepare_range1=$$(-vm-generic-range1)' \
+	-var 'vm_prepare_range2=$$(-vm-generic-range2)' \
 	-var 'vm_authorized_keys=$$(VM_AUTHORIZED_KEYS)' \
 	-var 'vm_extra_envs=$$(-vm-generic-extra-envs-var)'
 $(1)-copy-scripts ?= $$(VM_GENERIC_SCRIPTS_DIR)

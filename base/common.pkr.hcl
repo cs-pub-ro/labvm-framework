@@ -61,20 +61,11 @@ build {
   }
 
   provisioner "shell" {
-    # run the base preparation script (if any)
+    # run the base provisioning scripts (single stage)
     inline = [
       "${local.provision_init}",
-      "vm_run_script --optional \"${var.vm_prepare_script}\""
-    ]
-    expect_disconnect = true
-    execute_command = local.sudo
-    environment_vars = local.envs
-  }
-  provisioner "shell" {
-    # run the base provisioning scripts
-    inline = [
-      "${local.provision_init}",
-      "vm_run_scripts --optional \"${var.vm_install_base}\""
+      "[[ -n '${var.vm_prepare_range}' ]] || { sh_log_info 'SKIP base provisioning!'; exit 0; }",
+      "VM_PREPARE_RANGE='${var.vm_prepare_range}' VM_PREPARE_DIR='${var.vm_prepare_dir}' vm_run_script \"${var.vm_prepare_script}\""
     ]
     expect_disconnect = true
     execute_command = local.sudo
