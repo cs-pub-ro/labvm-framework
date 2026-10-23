@@ -21,6 +21,7 @@ variables {
   output_directory = "/tmp/packer-out"
   boot_wait = "5s"
   boot_key_interval = "10ms"
+  boot_command_wait = "5s"
   ssh_username = "TODO"
   ssh_password = "TODO"
 }

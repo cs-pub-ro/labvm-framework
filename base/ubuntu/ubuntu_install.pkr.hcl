@@ -18,9 +18,9 @@ locals {
     "linux /casper/vmlinuz ",
     "autoinstall ds=\"nocloud;s=http://{{.HTTPIP}}:{{.HTTPPort}}/\" ",
     local.ubuntu_kernel_cmdline,
-    "<enter><wait20s>",
+    "<enter><wait${var.boot_command_wait}>",
     "initrd /casper/initrd",
-    "<enter><wait20s>",
+    "<enter><wait${var.boot_command_wait}>",
     "boot<enter>",
   ] 
 
