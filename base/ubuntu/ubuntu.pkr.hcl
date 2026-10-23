@@ -22,7 +22,7 @@ source "qemu" "base" {
   accelerator  = local.qemu_arch_accelerator
   qemuargs     = local.qemu_arch_qemuargs
   // Virtual Hardware Specs
-  memory         = 2048
+  memory         = var.vm_memory
   cpus           = 2
   disk_size      = var.disk_size
   disk_interface = "virtio"

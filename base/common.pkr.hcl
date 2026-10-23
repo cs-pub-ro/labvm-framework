@@ -17,6 +17,7 @@ variables {
   vm_scripts_dir = "scripts/"
   qemu_ssh_forward = 20022
   disk_size = 8192
+  vm_memory = 2048
   use_backing_file = false
   output_directory = "/tmp/packer-out"
   boot_wait = "5s"
