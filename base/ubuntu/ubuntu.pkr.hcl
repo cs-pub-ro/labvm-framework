@@ -60,6 +60,7 @@ source "qemu" "base" {
   }
 
   boot_wait = (var.use_backing_file ? null : var.boot_wait)
+  boot_key_interval = var.boot_key_interval
   boot_command = ((var.use_backing_file && var.vm_send_boot_keys) ? null :
     local.ubuntu_boot_commands)
   shutdown_command  = "sudo /sbin/shutdown -h now"

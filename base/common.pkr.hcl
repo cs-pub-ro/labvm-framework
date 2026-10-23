@@ -20,6 +20,7 @@ variables {
   use_backing_file = false
   output_directory = "/tmp/packer-out"
   boot_wait = "5s"
+  boot_key_interval = "10ms"
   ssh_username = "TODO"
   ssh_password = "TODO"
 }
