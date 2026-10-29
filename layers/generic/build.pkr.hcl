@@ -19,7 +19,7 @@ variables {
   vm_install_stage2 = "install-stage2.d/"
   vm_authorized_keys = ""
   qemu_ssh_forward = 20022
-  disk_size = 8192
+  disk_size = 20480
   source_image = "./path/to/base-vm.qcow2"
   source_checksum = "none"
   use_backing_file = true
@@ -44,7 +44,7 @@ locals {
     "VM_SCRIPTS_DIR=${local.scripts_dir}",
     "VM_AUTHORIZED_KEYS=${basename(var.vm_authorized_keys)}"
   ], var.vm_extra_envs)
-  sudo = "{{.Vars}} sudo -E -S bash -e '{{.Path}}'"
+  sudo = "sudo {{.Vars}} bash -e '{{.Path}}'"
   provision_init = "set -e; source $VM_SCRIPTS_DIR/lib/base.sh; @import 'vmrunner';"
 }
 
@@ -60,8 +60,8 @@ source "qemu" "vm" {
   accelerator  = local.qemu_arch_accelerator
   qemuargs     = local.qemu_arch_qemuargs
   // Virtual Hardware Specs
-  memory         = 2048
-  cpus           = 2
+  memory         = 8192
+  cpus           = 16
   disk_size      = var.disk_size
   disk_interface = "virtio"
   net_device     = "virtio-net"

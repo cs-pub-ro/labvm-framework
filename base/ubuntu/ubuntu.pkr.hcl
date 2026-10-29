@@ -23,7 +23,7 @@ source "qemu" "base" {
   qemuargs     = local.qemu_arch_qemuargs
   // Virtual Hardware Specs
   memory         = var.vm_memory
-  cpus           = 2
+  cpus           = 16
   disk_size      = var.disk_size
   disk_interface = "virtio"
   net_device     = "virtio-net"
