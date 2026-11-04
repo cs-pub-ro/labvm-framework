@@ -11,10 +11,10 @@ DEBUG_CONSOLE ?=
 ifneq ($(filter-out 0 no false,$(DEBUG_CONSOLE)),)
 HEADLESS := 1
 ifeq ($(QEMU_MONITOR),)
-QEMU_MONITOR := $(BUILD_DIR)/qemu-monitor.sock
+QEMU_MONITOR = $(BUILD_DIR)/qemu-monitor.sock
 endif
 ifeq ($(QEMU_SERIAL),)
-QEMU_SERIAL := $(BUILD_DIR)/qemu-serial.log
+QEMU_SERIAL = $(BUILD_DIR)/qemu-serial.log
 endif
 endif
 # Packer expects a real boolean for the `headless` variable
