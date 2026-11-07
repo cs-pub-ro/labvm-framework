@@ -21,8 +21,8 @@ could be used to build VMs for any purpose) using `qemu` and
 
 **Requirements:**
 
- - a modern Linux system;
- - basic build tools (make);
+ - a modern Linux system (with `bash`, `git`);
+ - basic build tools (`make`);
  - [Hashicorp's Packer](https://packer.io/);
  - [qemu+kvm](https://qemu.org/);
 
@@ -103,7 +103,7 @@ VirtualBox using the same image ;) ):
 ```Makefile
 exported-name = $(vm-prefix)_exported
 exported-vmname = Example VM Project
-exported-type = vmware  # use vm-combo for both VMware + VBox
+exported-type = vm-combo  # use vm-combo for both VMware + VBox
 exported-src-from = main
 ```
 
@@ -165,7 +165,7 @@ The framework has the following three main components:
 - The **layers**, each containing or inheriting a Packer script, categorized 
   into [base layers](./base/) and well, just [layers :D ](./layers/) meant to 
   be used on top of others. Each layer has a couple of provisioning `scripts/`
-  and some helper Makefile variables + macros inside a `build.mk` file.
+  and some helper Makefile variables + macros in a `build.mk` file.
 
 ### Base images
 
