@@ -3,7 +3,10 @@ $(call mk_include_guard,vm_lib_gen_vmware)
 
 ## <vm>-specific (placeholder for VM's ID + goal) variables and their defaults
 -vmware-name = $(call _def_value,$(vm)-vmname,$(-vm-name))
--vmware-ostype = $(call _def_value,$(vm)-ostype,ubuntu-64)
+# <vm>-vmware-ostype: VMware guest OS id, defaults to <vm>-ostype
+-vmware-ostype = $(call _def_value,$(vm)-vmware-ostype,$(call _def_value,$(vm)-ostype,ubuntu-64))
+# <vm>-vmware-disk-type: vmdk disk interface (scsi / sata etc.)
+-vmware-disk-type = $(call _def_value,$(vm)-vmware-disk-type,scsi)
 -vmware-ramsize = $(call _def_value,$(vm)-ramsize,2048)
 -vmware-vcpus = $(call _def_value,$(vm)-vcpus,2)
 -vmware-ssh-nat = $(call _def_value,$(vm)-vmware-ssh-nat,10022)
@@ -52,9 +55,9 @@ memsize = "$(-vmware-ramsize)"
 mem.hotadd = "TRUE"
 scsi0.virtualDev = "lsilogic"
 scsi0.present = "TRUE"
-scsi0:0.fileName = "$(notdir $($(vm)-vmware-dest-vmdk))"
-scsi0:0.present = "TRUE"
 sata0.present = "TRUE"
+$(-vmware-disk-type)0:0.fileName = "$(notdir $($(vm)-vmware-dest-vmdk))"
+$(-vmware-disk-type)0:0.present = "TRUE"
 sata0:1.deviceType = "cdrom-raw"
 sata0:1.fileName = "auto detect"
 sata0:1.present = "FALSE"

@@ -3,9 +3,17 @@ $(call mk_include_guard,vm_lib_gen_vbox)
 
 ## <vm>-specific (placeholder for VM's ID + goal) variables and their defaults
 -vbox-name = $(call _def_value,$(vm)-vmname,$(-vm-name))
--vbox-ostype = $(call _def_value,$(vm)-ostype,Ubuntu_64)
+# <vm>-ostype-vbox: VirtualBox guest OS id, defaults to <vm>-ostype
+-vbox-ostype = $(call _def_value,$(vm)-vbox-ostype,$(call _def_value,$(vm)-ostype,Ubuntu_64))
+# <vm>-vram: video memory in MB (required for higher resolutions)
+-vbox-vram = $(call _def_value,$(vm)-vram,128)
+# <vm>-vbox-gfx-controller: VBoxSVGA (Windows 7+), VMSVGA (Linux) or VBoxVGA (legacy)
+-vbox-gfx-controller = $(call _def_value,$(vm)-vbox-gfx-controller,VMSVGA)
+# <vm>-ramsize (in MB)
 -vbox-ramsize = $(call _def_value,$(vm)-ramsize,2048)
+# <vm>-vcpus (CPU #)
 -vbox-vcpus = $(call _def_value,$(vm)-vcpus,2)
+# <vm>-ssh-nat: host port to DNAT for ssh/22 (10022)
 -vbox-ssh-nat = $(call _def_value,$(vm)-ssh-nat,10022)
 # <vm>-src-image: take source image from another file (when ! <vm>-source-from)
 -vbox-src-vmdk = $(strip $(if $(-vm-source-from),\
@@ -30,7 +38,7 @@ define vbox-prj-template=
     <Hardware>
       <Memory RAMSize="$(-vbox-ramsize)"/>
       <HID Pointing="USBTablet"/>
-      <Display controller="VMSVGA" VRAMSize="16"/>
+      <Display controller="$(-vbox-gfx-controller)" VRAMSize="$(-vbox-vram)"/>
       <Firmware/>
       <BIOS>
         <IOAPIC enabled="true"/>
