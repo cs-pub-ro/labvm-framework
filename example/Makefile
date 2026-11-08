@@ -51,6 +51,7 @@ full-copy-scripts = $(abspath $(FRAMEWORK_DIR)/scripts)/
 full-copy-scripts += $(VM_FULL_FEATURED_SCRIPTS_DIR)
 # also add our main scripts (since we can ;) )
 full-copy-scripts += $(abspath ./main/scripts)/
+full-script-dirs = prepare-main.d:prepare-full.d
 
 # Export the main VM to both VirtualBox & VMware using the ComboVM rules
 # [re]build with `make exported_clean exported`

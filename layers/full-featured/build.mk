@@ -11,7 +11,7 @@ VM_FULL_FEATURED_SRC_FROM ?= base
 define _vm_new_layer_full_featured_tpl
 $(call check-var,_vm_new_layer_generic_tpl)$(_vm_new_layer_generic_tpl)
 $(1)-copy-scripts = $$(VM_FULL_FEATURED_SCRIPTS_DIR)
-$(1)-script-dirs = prepare.d:full-prepare.d
+$(1)-script-dirs = prepare-full.d
 $(1)-src-from = $$(VM_FULL_FEATURED_SRC_FROM)
 
 endef

@@ -11,6 +11,7 @@ VM_CLOUD_SRC_FROM ?= main
 define _vm_new_layer_cloud_tpl
 $(call check-var,_vm_new_layer_generic_tpl)$(_vm_new_layer_generic_tpl)
 $(1)-copy-scripts = $$(VM_CLOUD_SCRIPTS_DIR)
+$(1)-script-dirs = prepare-cloud.d
 $(1)-src-from = $$(VM_CLOUD_SRC_FROM)
 $(1)-extra-rules = $$(vm_cloud_test_rule)
 
