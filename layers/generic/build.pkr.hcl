@@ -15,6 +15,8 @@ variables {
   vm_scripts_dir = "scripts/"
   vm_pre_copy_cmd = ""
   vm_prepare_script = "prepare-multistage.sh"
+  # colon-separated snippets dirs (PATH-style: first one wins on duplicates);
+  vm_prepare_dirs = "prepare.d:install-stage1.d:install-stage2.d"
   vm_prepare_range1 = "1-19"
   vm_prepare_range2 = "1,20-99"
   vm_authorized_keys = ""
@@ -46,6 +48,7 @@ locals {
   ], var.vm_extra_envs)
   sudo = "{{.Vars}} sudo -E -S bash -e '{{.Path}}'"
   provision_init = "set -e; source $VM_SCRIPTS_DIR/lib/base.sh; @import 'vmrunner';"
+  prepare_dirs = (var.vm_prepare_dirs != "" ? var.vm_prepare_dirs : var.vm_prepare_dir)
 }
 
 source "qemu" "vm" {
@@ -115,7 +118,7 @@ build {
     inline = [
       "${local.provision_init}",
       "[[ -n '${var.vm_prepare_range1}' ]] || { sh_log_info 'SKIP stage 1!'; exit 0; }",
-      "VM_PREPARE_RANGE='${var.vm_prepare_range1}' vm_run_script \"${var.vm_prepare_script}\""
+      "VM_PREPARE_RANGE='${var.vm_prepare_range1}' VM_PREPARE_DIRS='${local.prepare_dirs}' vm_run_script \"${var.vm_prepare_script}\""
     ]
     expect_disconnect = true
     execute_command = local.sudo
@@ -126,7 +129,7 @@ build {
     inline = [
       "${local.provision_init}",
       "[[ -n '${var.vm_prepare_range2}' ]] || { sh_log_info 'SKIP stage 2!'; exit 0; }",
-      "VM_PREPARE_RANGE='${var.vm_prepare_range2}' vm_run_script \"${var.vm_prepare_script}\""
+      "VM_PREPARE_RANGE='${var.vm_prepare_range2}' VM_PREPARE_DIRS='${local.prepare_dirs}' vm_run_script \"${var.vm_prepare_script}\""
     ]
     execute_command = local.sudo
     environment_vars = local.envs

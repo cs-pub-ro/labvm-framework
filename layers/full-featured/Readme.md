@@ -45,9 +45,11 @@ The scripts use the following numbering convention:
    kernel / firmware / bootloader aspects of the VM;
 - `20+`: install scripts sourced on `stage2` after the reboot.
 
-Note: The snippets are automatically symlinked to the appropiate VM stage by the
-shared [`prepare-multistage.sh`](../../scripts/prepare-multistage.sh) script using the
-above conventions.
+Note: The snippets are selected by range (and sourced) by the shared
+[`prepare-multistage.sh`](../../scripts/prepare-multistage.sh) script using the
+above conventions. Legacy trees keeping their snippets in `full-snippets.d`
+still work (the default `vm_prepare_dirs` list includes it), though `prepare.d`
+takes precedence on identical filenames; please rename the dir when you can.
 
 If you wish to cherry-pick individual scripts, you must manually study them for
 any inter-dependencies!

@@ -15,6 +15,8 @@ variables {
   vm_pause = 0
   vm_debug = 0
   vm_scripts_dir = "scripts/"
+  # colon-separated snippets dirs (PATH-style: first one wins on duplicates);
+  vm_prepare_dirs = ""
   qemu_ssh_forward = 20022
   disk_size = 8192
   vm_memory = 2048
@@ -39,6 +41,7 @@ locals {
   ]
   sudo = "{{.Vars}} sudo -E -S bash -e '{{.Path}}'"
   provision_init = "set -e; source $VM_SCRIPTS_DIR/lib/base.sh; @import 'vmrunner';"
+  prepare_dirs = (var.vm_prepare_dirs != "" ? var.vm_prepare_dirs : var.vm_prepare_dir)
 }
 
 
@@ -65,13 +68,14 @@ build {
     inline = [
       "${local.provision_init}",
       "[[ -n '${var.vm_prepare_range}' ]] || { sh_log_info 'SKIP base provisioning!'; exit 0; }",
-      "VM_PREPARE_RANGE='${var.vm_prepare_range}' VM_PREPARE_DIR='${var.vm_prepare_dir}' vm_run_script \"${var.vm_prepare_script}\""
+      "VM_PREPARE_RANGE='${var.vm_prepare_range}' VM_PREPARE_DIRS='${local.prepare_dirs}' vm_run_script \"${var.vm_prepare_script}\""
     ]
     expect_disconnect = true
     execute_command = local.sudo
     environment_vars = local.envs
   }
 
+  # optionally, when PAUSE=1, keep the qemu VM open!
   provisioner "breakpoint" {
     disable = (var.vm_pause == 0)
     note    = "this is a breakpoint"

@@ -13,21 +13,45 @@ not error if they do not exist!):
 1. Sync files from a local `vm_scripts_src` path (defaults to `scripts/` 
    relative to the packer file, so make sure you use absolute path inside your 
    Makefile!) onto the VM (hardcoded path: `/opt/vm-scripts/` -- used as base for
-   all other stages!). All provisioning snippets live in a single `prepare.d` 
-   dir, each named `NN-name.sh`;
+   all other stages!). All provisioning snippets live in `prepare.d` (see below),
+   each named `NN-name.sh`;
 
-2. Run the first stage: `prepare-multistage.sh` over `prepare.d` with a numeric
-   range (default `1-19`); the last script may issue an optional reboot, it will
-   be properly awaited by Packer; use this stage to fix networking and do kernel /
-   bootloader-level configuration (e.g., `net.ifnames` cmdline options);
+2. Run the first stage: `prepare-multistage.sh` over the snippets dirs with a
+   numeric range (default `1-19`); the last script may issue an optional reboot,
+   it will be properly awaited by Packer; use this stage to fix networking and do
+   kernel / bootloader-level configuration (e.g., `net.ifnames` cmdline options);
 
-3. Run the second (and last) stage: `prepare-multistage.sh` over `prepare.d` with
-   a numeric range (default `1,20-99`); the init scripts (`NN < 10`) are sourced
-   again here, followed by all the install scripts expecting a proper kernel setup
-   (ran after the reboot).
+3. Run the second (and last) stage: `prepare-multistage.sh` over the snippets
+   dirs with a numeric range (default `1,20-99`); the init scripts (`NN < 10`) are
+   sourced again here, followed by all the install scripts expecting a proper
+   kernel setup (ran after the reboot).
 
 The ranges are just the `NN` prefix filters, so a snippet runs in a stage when its
 `NN` falls inside that stage's range -- no symlinks are involved.
+
+### Snippets dirs
+
+The snippet dirs are configured with the `vm_prepare_dirs` Packer variable: a
+colon-separated (`PATH`-style) list of dirs relative to `/opt/vm-scripts/` (or
+absolute). The default is:
+
+```
+prepare.d:install-stage1.d:install-stage2.d
+```
+
+Missing dirs are skipped, so the legacy names keep old trees working.
+The dirs form a single virtual dir: snippets from **all** of them are sorted 
+by `NN`, and on duplicate filenames the **first** dir listed wins (again like 
+`$PATH`).
+So put `prepare.d` first so it shadows legacy snippets.
+From a `Makefile`, override the list with e.g.:
+
+```Makefile
+main-packer-args += -var 'vm_prepare_dirs=prepare.d:my-legacy.d'
+```
+
+Note: two dirs with the *same* name cannot be listed -- `<layer>-copy-scripts` rsyncs
+all of them into the same path in the VM (last copied wins at that stage).
 
 You can include (or simply inspire from) the layer's `build.mk` containing the
 VM framework macros to use for building a VM.
