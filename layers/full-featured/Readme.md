@@ -39,7 +39,7 @@ get copied to `/opt/vm-scripts/` by the first Packer provisioning command.
 
 The scripts use the following numbering convention:
 
-- `01-09`: initialization scripts, sourced on all [generic provisioning 
+- `01-04`: initialization scripts, sourced on all [generic provisioning 
    stages](../generic/Readme.md);
 - `10-19`: scripts ran by in `stage1`, before the reboot, used to configure
    kernel / firmware / bootloader aspects of the VM;

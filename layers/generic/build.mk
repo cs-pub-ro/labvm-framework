@@ -19,7 +19,7 @@ VM_AUTHORIZED_KEYS ?= $(abspath $(_find_file_in_path *authorized_keys*,\
 -vm-generic-script-dirs = $(strip $(call _def_value,$(vm)-script-dirs,\
 		prepare.d:install-stage1.d:install-stage2.d))
 -vm-generic-range1 = $(strip $(call _def_value,$(vm)-script-range1,1-19))
--vm-generic-range2 = $(strip $(call _def_value,$(vm)-script-range2,1$(comma)20-99))
+-vm-generic-range2 = $(strip $(call _def_value,$(vm)-script-range2,1-4$(comma)20-99))
 
 -vm-generic-pre-copy-cmd = $(call _def_value,$(vm)-pre-copy-cmd,)
 -vm-generic-extra-envs = $(call _def_value,$(vm)-extra-envs,)
