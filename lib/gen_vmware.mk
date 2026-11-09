@@ -15,6 +15,17 @@ $(call mk_include_guard,vm_lib_gen_vmware)
 			$(let vm,$(-vm-source-from),$($(vm)-vmdk-file)),\
 			$(call _def_value,$(vm)-src-image,$(vm).vmdk)))
 
+define _VMWARE_DISK_scsi=
+scsi0.virtualDev = "lsilogic"
+scsi0.present = "TRUE"
+scsi0:0.fileName = "$(notdir $($(vm)-vmware-dest-vmdk))"
+scsi0:0.present = "TRUE"
+endef
+define _VMWARE_DISK_sata=
+sata0:0.fileName = "$(notdir $($(vm)-vmware-dest-vmdk))"
+sata0:0.present = "TRUE"
+endef
+
 define vmware-prj-template=
 #!/usr/bin/vmware
 .encoding = "UTF-8"
@@ -53,11 +64,8 @@ cpuid.coresPerSocket = "1"
 vcpu.hotadd = "TRUE"
 memsize = "$(-vmware-ramsize)"
 mem.hotadd = "TRUE"
-scsi0.virtualDev = "lsilogic"
-scsi0.present = "TRUE"
 sata0.present = "TRUE"
-$(-vmware-disk-type)0:0.fileName = "$(notdir $($(vm)-vmware-dest-vmdk))"
-$(-vmware-disk-type)0:0.present = "TRUE"
+$(_VMWARE_DISK_$(-vmware-disk-type))
 sata0:1.deviceType = "cdrom-raw"
 sata0:1.fileName = "auto detect"
 sata0:1.present = "FALSE"
