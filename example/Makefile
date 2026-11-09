@@ -33,6 +33,7 @@ main-name = $(vm-prefix)_main
 # always update scripts from framework (prevent re-building base on changes)
 main-copy-scripts = $(abspath $(FRAMEWORK_DIR)/scripts)/
 main-copy-scripts += $(abspath ./main/scripts)/
+main-script-dirs = prepare-main.d
 # the generic layer allows us to specify custom environment variables, but it
 # has a special format (comma-separated quoted strings):
 main-extra-envs += "VM_EXAMPLE=TEST", "VM_TEST=New Test",
